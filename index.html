@@ -1,0 +1,29 @@
+<style>
+  html,
+  body {
+    margin: 0;
+  }
+  body {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+  }
+  #main-content {
+    padding: 8px;
+  }
+  #graph {
+    height: 400px;
+    width: 100%;
+    /* border: 1px solid black; */
+    border-radius: 8px;
+  }
+</style>
+
+<div id="main-content">
+  <canvas id="graph"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/mathjs@11.2.1/lib/browser/math.js"></script>
+<script src="./loess.js"></script>
+<script src="./main.js"></script>

@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "ESNext",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noLib": false,
+    "moduleResolution": "nodenext",
+    "lib": [
+      "es2017",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "strict": true,
+    /**
+     * baseUrl + paths are needed so as to allow for module resolution with 
+     * a leading slash
+     *
+     * context: https://github.com/microsoft/TypeScript/issues/13730
+     */
+    "baseUrl": ".",
+    "paths": {
+      "/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    ".js",
+    ".html",
+    ".css"
+  ]
+}
