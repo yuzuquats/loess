@@ -1,4 +1,4 @@
-type MathJsMatrix = any;  // const o: Object = { arr: number[][] }
+type MathJsMatrix = any; // const o: Object = { arr: number[][] }
 type matrix = Array<Array<number>>;
 type arr1d = Array<number>;
 type Arr1ToArr1 = (i: arr1d) => arr1d;
@@ -27,42 +27,38 @@ const MathJs: {
   euclideanDist: (orig: arr1d, dest: arr1d) => number;
   distMatrix: (origSet: matrix, destSet: matrix) => matrix;
   round: <T>(x: T, y: number) => T;
-  } =
+} =
   // @ts-ignore
   math;
-  
-console.log(MathJs);
 
 // MathHelper are custom math helper APIs we implement ourselves
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js
 //
 class MathHelper {
-
   // (1 - (d / dmax) ^ degree) ^ degree valid for d / dmax > 1
   // https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
-  // The weight for a specific point in any localized subset of data is 
-  // obtained by evaluating the weight function at the distance between 
-  // that point and the point of estimation, after scaling the distance 
-  // so that the maximum absolute distance over all of the points in the 
+  // The weight for a specific point in any localized subset of data is
+  // obtained by evaluating the weight function at the distance between
+  // that point and the point of estimation, after scaling the distance
+  // so that the maximum absolute distance over all of the points in the
   // subset of data is exactly one.
 
   // d: distance between that point and the point of estimation
   // dmax: the maximum absolute distance over all of the points
-  
+
   static weightFunc(d: number, dmax: number, degree: number): number {
     return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
   }
 
-  
   static normalize(referenceArr: arr1d): Arr1ToArr1 {
     const cutoff = Math.ceil(0.1 * referenceArr.length);
-    console.log('cutoff', cutoff);
+    console.log("cutoff", cutoff);
 
     const sorted_arr = referenceArr.sort();
     console.log(sorted_arr);
 
     function sortNumber(a: number, b: number) {
-      return a-b;
+      return a - b;
     }
     const sorted_arr1 = referenceArr.sort(sortNumber);
     console.log(sorted_arr1);
@@ -70,14 +66,13 @@ class MathHelper {
     // const trimmed_arr = referenceArr
     //  .sort()
     //  .slice(cutoff, referenceArr.length - cutoff);
- 
+
     // this is to remove the outliers
-    const trimmed_arr = sorted_arr1
-      .slice(cutoff, referenceArr.length - cutoff);     
-    console.log('trimmed_arr', trimmed_arr);
+    const trimmed_arr = sorted_arr1.slice(cutoff, referenceArr.length - cutoff);
+    console.log("trimmed_arr", trimmed_arr);
 
     const sd = MathJs.std(trimmed_arr);
-    console.log('sd',sd);  
+    console.log("sd", sd);
     return function (outputArr) {
       return outputArr.map((val) => val / sd);
     };
@@ -115,22 +110,28 @@ class MathHelper {
     );
   }
 
-  static weightMatrix(distMat: matrix, inputWeights: arr1d, bandwidth: number): matrix {
+  static weightMatrix(
+    distMat: matrix,
+    inputWeights: arr1d,
+    bandwidth: number
+  ): matrix {
     function zip(arrays: [arr1d, arr1d]) {
-      return arrays[0].map(function(_,i){
-          return arrays.map(function(array){return array[i]})
+      return arrays[0].map(function (_, i) {
+        return arrays.map(function (array) {
+          return array[i];
+        });
       });
-    };
-  
+    }
+
     return distMat.map((distVect) => {
       const sorted = zip([distVect, inputWeights]).sort((v) => v[0]);
 
       const zipped = zip([distVect, inputWeights]);
-      console.log('zipped:', zipped);
-      console.log('sorted:', sorted);
+      console.log("zipped:", zipped);
+      console.log("sorted:", sorted);
 
       const cutoff: number = MathJs.sum(inputWeights) * bandwidth;
-      console.log('cutoff:', cutoff);
+      console.log("cutoff:", cutoff);
 
       let sumOfWeights = 0;
       let cutoffIndex = sorted.findIndex((v) => {
@@ -168,18 +169,19 @@ class MathHelper {
   // https://en.wikipedia.org/wiki/Weighted_least_squares
   // https://mathjs.org/
 
-  static weightedLeastSquare(predictors: matrix, response: arr1d, weights: arr1d) {
+  static weightedLeastSquare(
+    predictors: matrix,
+    response: arr1d,
+    weights: arr1d
+  ) {
     try {
-      const weightedY = MathJs.matrix(
-        MathJs.dotMultiply(weights, response)
-      );
-      
-      
+      const weightedY = MathJs.matrix(MathJs.dotMultiply(weights, response));
+
       const weightedX = MathHelper.transpose(
         //MathJs.matrix(
-          predictors.map((x) => {
-            return MathJs.dotMultiply(weights, x);
-          })
+        predictors.map((x) => {
+          return MathJs.dotMultiply(weights, x);
+        })
         //)
       );
       const LHS = MathJs.multiply(predictors, weightedX);
@@ -191,7 +193,7 @@ class MathHelper {
 
       // find  yhat = coeffienct * predictors
       const yhat = MathJs.squeeze(MathJs.multiply(beta, predictors));
-   
+
       // residual = actual - predicted
       const residual = MathJs.subtract(response, yhat);
       return { beta, yhat, residual };

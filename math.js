@@ -5,17 +5,16 @@
 const MathJs = 
 // @ts-ignore
 math;
-console.log(MathJs);
 // MathHelper are custom math helper APIs we implement ourselves
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js
 //
 class MathHelper {
     // (1 - (d / dmax) ^ degree) ^ degree valid for d / dmax > 1
     // https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
-    // The weight for a specific point in any localized subset of data is 
-    // obtained by evaluating the weight function at the distance between 
-    // that point and the point of estimation, after scaling the distance 
-    // so that the maximum absolute distance over all of the points in the 
+    // The weight for a specific point in any localized subset of data is
+    // obtained by evaluating the weight function at the distance between
+    // that point and the point of estimation, after scaling the distance
+    // so that the maximum absolute distance over all of the points in the
     // subset of data is exactly one.
     // d: distance between that point and the point of estimation
     // dmax: the maximum absolute distance over all of the points
@@ -24,7 +23,7 @@ class MathHelper {
     }
     static normalize(referenceArr) {
         const cutoff = Math.ceil(0.1 * referenceArr.length);
-        console.log('cutoff', cutoff);
+        console.log("cutoff", cutoff);
         const sorted_arr = referenceArr.sort();
         console.log(sorted_arr);
         function sortNumber(a, b) {
@@ -36,11 +35,10 @@ class MathHelper {
         //  .sort()
         //  .slice(cutoff, referenceArr.length - cutoff);
         // this is to remove the outliers
-        const trimmed_arr = sorted_arr1
-            .slice(cutoff, referenceArr.length - cutoff);
-        console.log('trimmed_arr', trimmed_arr);
+        const trimmed_arr = sorted_arr1.slice(cutoff, referenceArr.length - cutoff);
+        console.log("trimmed_arr", trimmed_arr);
         const sd = MathJs.std(trimmed_arr);
-        console.log('sd', sd);
+        console.log("sd", sd);
         return function (outputArr) {
             return outputArr.map((val) => val / sd);
         };
@@ -74,17 +72,18 @@ class MathHelper {
     static weightMatrix(distMat, inputWeights, bandwidth) {
         function zip(arrays) {
             return arrays[0].map(function (_, i) {
-                return arrays.map(function (array) { return array[i]; });
+                return arrays.map(function (array) {
+                    return array[i];
+                });
             });
         }
-        ;
         return distMat.map((distVect) => {
             const sorted = zip([distVect, inputWeights]).sort((v) => v[0]);
             const zipped = zip([distVect, inputWeights]);
-            console.log('zipped:', zipped);
-            console.log('sorted:', sorted);
+            console.log("zipped:", zipped);
+            console.log("sorted:", sorted);
             const cutoff = MathJs.sum(inputWeights) * bandwidth;
-            console.log('cutoff:', cutoff);
+            console.log("cutoff:", cutoff);
             let sumOfWeights = 0;
             let cutoffIndex = sorted.findIndex((v) => {
                 sumOfWeights += v[1];
