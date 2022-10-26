@@ -1,91 +1,4 @@
 "use strict";
-const MathJs = 
-// @ts-ignore
-math;
-class MathHelper {
-    static weightFunc(d, dmax, degree) {
-        return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
-    }
-    static normalize(referenceArr) {
-        const cutoff = Math.ceil(0.1 * referenceArr.length);
-        const trimmed_arr = referenceArr
-            .sort()
-            .slice(cutoff, referenceArr.length - cutoff);
-        const sd = MathJs.std(trimmed_arr);
-        return function (outputArr) {
-            return outputArr.map((val) => val / sd);
-        };
-    }
-    static transpose(X) {
-        const transposed = [];
-        for (let i = 0; i < X[0].length; i++) {
-            transposed.push(X.map((x) => x[i]));
-        }
-        return transposed;
-    }
-    static euclideanDist(orig, dest) {
-        if (orig.length < 2) {
-            return Math.abs(orig[0] - dest[0]);
-        }
-        else {
-            return Math.sqrt(orig.reduce((acc, val, idx) => acc + Math.pow(val - dest[idx], 2), 0));
-        }
-    }
-    static distMatrix(origSet, destSet) {
-        return origSet.map((orig) => destSet.map((dest) => MathHelper.euclideanDist(orig, dest)));
-    }
-    static weightMatrix(distMat, inputWeights, bandwidth) {
-        return distMat.map((distVect) => {
-            const sorted = zip(distVect, inputWeights).sort((v) => v[0]);
-            const cutoff = MathJs.sum(inputWeights) * bandwidth;
-            let sumOfWeights = 0;
-            let cutoffIndex = sorted.findIndex((v) => {
-                sumOfWeights += v[1];
-                return sumOfWeights >= cutoff;
-            });
-            let dmax = bandwidth > 1
-                ? sorted[sorted.length - 1][0] * bandwidth
-                : sorted[cutoffIndex][0];
-            return MathJs.dotMultiply(distVect.map((d) => MathHelper.weightFunc(d, dmax, 3)), inputWeights);
-        });
-    }
-    static polynomialExpansion(factors, degree) {
-        const expandedSet = [];
-        let constTerm = 1;
-        if (Array.isArray(factors[0]))
-            constTerm = Array(factors[0].length).fill(1);
-        function crossMultiply(accumulator, pointer, n) {
-            if (n > 1) {
-                for (let i = pointer; i < factors.length; i++) {
-                    crossMultiply(MathJs.dotMultiply(accumulator, factors[i]), i, n - 1);
-                }
-            }
-            else {
-                expandedSet.push(accumulator);
-            }
-        }
-        for (let d = 0; d <= degree; d++)
-            crossMultiply(constTerm, 0, d + 1);
-        return expandedSet;
-    }
-    static weightedLeastSquare(predictors, response, weights) {
-        try {
-            const weightedY = MathHelper.matrix(MathHelper.dotMultiply(weights, response));
-            const weightedX = MathHelper.transpose(math.matrix(predictors.map((x) => {
-                return math.dotMultiply(weights, x);
-            })));
-            const LHS = math.multiply(predictors, weightedX);
-            const RHS = math.multiply(predictors, weightedY);
-            const beta = math.multiply(math.inv(LHS), RHS);
-            const yhat = math.squeeze(math.multiply(beta, predictors));
-            const residual = math.subtract(response, yhat);
-            return { beta, yhat, residual };
-        }
-        catch (err) {
-            return { error: err };
-        }
-    }
-}
 class Loess {
     constructor(data, options = {
         span: 0.75,
@@ -124,8 +37,8 @@ class Loess {
                     const sumWeights = math.sum(weights[idx]);
                     const mle = sumWeights === 0
                         ? 0
-                        : math.multiply(this.y, weights[idx]) / sumWeights;
-                    fit.beta = math.zeros(this.expandedX.length).set([0], mle);
+                        : MathJs.multiply(this.y, weights[idx]) / sumWeights;
+                    fit.beta = MathJs.zeros(this.expandedX.length).set([0], mle);
                     fit.residual = math.subtract(this.y, mle);
                 }
                 fitted.push(math.squeeze(math.multiply(point, fit.beta)));
