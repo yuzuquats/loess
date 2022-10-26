@@ -18,9 +18,21 @@ class MathHelper {
     // subset of data is exactly one.
     // d: distance between that point and the point of estimation
     // dmax: the maximum absolute distance over all of the points
+    /**
+     * TODO
+     * @param d
+     * @param dmax
+     * @param degree
+     * @returns
+     */
     static weightFunc(d, dmax, degree) {
         return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
     }
+    /**
+     * TODO
+     * @param referenceArr
+     * @returns
+     */
     static normalize(referenceArr) {
         const cutoff = Math.ceil(0.1 * referenceArr.length);
         console.log("cutoff", cutoff);
@@ -43,6 +55,11 @@ class MathHelper {
             return outputArr.map((val) => val / sd);
         };
     }
+    /**
+     * TODO
+     * @param X
+     * @returns
+     */
     static transpose(X) {
         const transposed = [];
         for (let i = 0; i < X[0].length; i++) {
@@ -52,6 +69,12 @@ class MathHelper {
     }
     // find the Euclidean distance
     // d(p,q) = sqrt((p1-q1)^2 + (p2-q2)^2 + (p3-q3)^2 + .....)
+    /**
+     * TODO
+     * @param orig
+     * @param dest
+     * @returns
+     */
     static euclideanDist(orig, dest) {
         if (orig.length < 2) {
             return Math.abs(orig[0] - dest[0]);
@@ -66,9 +89,22 @@ class MathHelper {
     // distanceMatrix = [dist(arr1, brr1), dist(arr1, brr2), dist(arr1, brr3)
     //                   dist(arr2, brr1), dist(arr2, brr2), dist(arr2, brr3)
     //                   dist(arr3, brr1), dist(arr3, brr2), dist(arr3, brr3)]
+    /**
+     * TODO
+     * @param origSet
+     * @param destSet
+     * @returns
+     */
     static distMatrix(origSet, destSet) {
         return origSet.map((orig) => destSet.map((dest) => MathHelper.euclideanDist(orig, dest)));
     }
+    /**
+     * TODO
+     * @param distMat
+     * @param inputWeights
+     * @param bandwidth
+     * @returns
+     */
     static weightMatrix(distMat, inputWeights, bandwidth) {
         function zip(arrays) {
             return arrays[0].map(function (_, i) {
@@ -95,6 +131,12 @@ class MathHelper {
             return MathJs.dotMultiply(distVect.map((d) => MathHelper.weightFunc(d, dmax, 3)), inputWeights);
         });
     }
+    /**
+     * TODO
+     * @param factors
+     * @param degree
+     * @returns
+     */
     static polynomialExpansion(factors, degree) {
         const expandedSet = [];
         let constTerm = 1;
@@ -115,7 +157,13 @@ class MathHelper {
         return expandedSet;
     }
     // https://en.wikipedia.org/wiki/Weighted_least_squares
-    // https://mathjs.org/
+    /**
+     * TODO
+     * @param predictors
+     * @param response
+     * @param weights
+     * @returns
+     */
     static weightedLeastSquare(predictors, response, weights) {
         try {
             const weightedY = MathJs.matrix(MathJs.dotMultiply(weights, response));

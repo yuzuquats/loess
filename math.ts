@@ -42,14 +42,24 @@ class MathHelper {
   // that point and the point of estimation, after scaling the distance
   // so that the maximum absolute distance over all of the points in the
   // subset of data is exactly one.
-
   // d: distance between that point and the point of estimation
   // dmax: the maximum absolute distance over all of the points
-
+  /**
+   * TODO
+   * @param d
+   * @param dmax
+   * @param degree
+   * @returns
+   */
   static weightFunc(d: number, dmax: number, degree: number): number {
     return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
   }
 
+  /**
+   * TODO
+   * @param referenceArr
+   * @returns
+   */
   static normalize(referenceArr: arr1d): Arr1ToArr1 {
     const cutoff = Math.ceil(0.1 * referenceArr.length);
     console.log("cutoff", cutoff);
@@ -78,6 +88,11 @@ class MathHelper {
     };
   }
 
+  /**
+   * TODO
+   * @param X
+   * @returns
+   */
   static transpose(X: Array<Array<number>>): Array<Array<number>> {
     const transposed: Array<Array<number>> = [];
     for (let i = 0; i < X[0].length; i++) {
@@ -88,6 +103,12 @@ class MathHelper {
 
   // find the Euclidean distance
   // d(p,q) = sqrt((p1-q1)^2 + (p2-q2)^2 + (p3-q3)^2 + .....)
+  /**
+   * TODO
+   * @param orig
+   * @param dest
+   * @returns
+   */
   static euclideanDist(orig: arr1d, dest: arr1d): number {
     if (orig.length < 2) {
       return Math.abs(orig[0] - dest[0]);
@@ -104,12 +125,25 @@ class MathHelper {
   // distanceMatrix = [dist(arr1, brr1), dist(arr1, brr2), dist(arr1, brr3)
   //                   dist(arr2, brr1), dist(arr2, brr2), dist(arr2, brr3)
   //                   dist(arr3, brr1), dist(arr3, brr2), dist(arr3, brr3)]
+  /**
+   * TODO
+   * @param origSet
+   * @param destSet
+   * @returns
+   */
   static distMatrix(origSet: matrix, destSet: matrix): matrix {
     return origSet.map((orig) =>
       destSet.map((dest) => MathHelper.euclideanDist(orig, dest))
     );
   }
 
+  /**
+   * TODO
+   * @param distMat
+   * @param inputWeights
+   * @param bandwidth
+   * @returns
+   */
   static weightMatrix(
     distMat: matrix,
     inputWeights: arr1d,
@@ -149,6 +183,12 @@ class MathHelper {
     });
   }
 
+  /**
+   * TODO
+   * @param factors
+   * @param degree
+   * @returns
+   */
   static polynomialExpansion(factors: matrix, degree: number): matrix {
     const expandedSet: matrix = [];
     let constTerm: number | arr1d = 1;
@@ -167,8 +207,14 @@ class MathHelper {
   }
 
   // https://en.wikipedia.org/wiki/Weighted_least_squares
-  // https://mathjs.org/
 
+  /**
+   * TODO
+   * @param predictors
+   * @param response
+   * @param weights
+   * @returns
+   */
   static weightedLeastSquare(
     predictors: matrix,
     response: arr1d,
