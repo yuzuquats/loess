@@ -29,6 +29,14 @@ function testNormalization() {
     const normalizedArr = MathHelper.normalize(caseOne.test)(caseOne.test);
     const val = MathJs.round(normalizedArr, 3);
     assertEqFloatArr(val, caseOne.expect);
+    const caseTwo = {
+        test: [
+            0.665, 0.701, 0.71, 0.767, 0.801, 0.807, 0.825, 0.831, 0.891, 0.902, 0.928,
+            0.97, 0.973, 0.98, 0.997, 1.0, 1.021, 1.045, 1.074, 1.089, 1.148, 1.224,
+        ],
+    };
+    const normalizedArr2 = MathHelper.normalize(caseTwo.test)(caseTwo.test);
+    console.log(normalizedArr2);
     console.log('EXIT: testNormalize');
 }
 function testTranspose() {

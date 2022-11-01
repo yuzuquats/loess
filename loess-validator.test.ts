@@ -32,7 +32,7 @@ function runLoessValidatorTests() {
   const model = new Loess(data);
   console.log('About to predict')
   const n = 20 
-  const robustWeights = Array(n).fill(MathJs.ones(n,n));
+  const robustWeights = Array(n).fill(MathJs.ones(n));
   console.log(robustWeights);
 
 }

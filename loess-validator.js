@@ -112,6 +112,7 @@ function validatePredict(data) {
     x.forEach((v) => validateIsNumber(v, "Invalid type: x should include only numbers"));
     const x_new = [x];
     const n = x.length;
+    // x's dimension
     if (this.d > 1) {
         validateIsArray(x2, "Invalid type: x2 should be an array");
         x2.forEach((v) => validateIsNumber(v, "Invalid type: x2 should include only numbers"));

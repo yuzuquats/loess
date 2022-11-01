@@ -30,7 +30,8 @@ const MathJs: {
   abs: (x: Array<number>) => Array<number>;
   median: (x: Array<number>) => number;
   zeros: (length: number) => Array<number>;
-  ones: (m: number, n: number) => MathJsMatrix;
+  ones: (m: number) => Array<number>;
+  //ones: (m: number, n: number) => MathJsMatrix;
   square: (x: Array<number>) => Array<number>;
   sort: (x: arr1d) => arr1d;
   size: (x: matrix) => arr1d;
@@ -42,28 +43,25 @@ const MathJs: {
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js
 //
 class MathHelper {
-  // (1 - (d / dmax) ^ degree) ^ degree valid for d / dmax > 1
-  // https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
-  // The weight for a specific point in any localized subset of data is
-  // obtained by evaluating the weight function at the distance between
-  // that point and the point of estimation, after scaling the distance
-  // so that the maximum absolute distance over all of the points in the
-  // subset of data is exactly one.
-  // d: distance between that point and the point of estimation
-  // dmax: the maximum absolute distance over all of the points
   /**
-   * TODO
-   * @param d
-   * @param dmax
+   * https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
+   * The weight for a specific point in any localized subset of data is
+   * obtained by evaluating the weight function at the distance between
+   * that point and the point of estimation, after scaling the distance
+   * so that the maximum absolute distance over all of the points in the
+   * subset of data is exactly one.
+   * The formula: (1 - (d / dmax) ^ degree) ^ degree valid for d / dmax > 1
+   * @param d: distance between that point and the point of estimation
+   * @param dmax: the maximum absolute distance over all of the points
    * @param degree
    * @returns
    */
   static weightFunc(d: number, dmax: number, degree: number): number {
     return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
   }
-
+ 
   /**
-   * TODO
+   * Normalize an array such that its standard deviation is 1
    * @param referenceArr
    * @returns
    */
@@ -74,7 +72,6 @@ class MathHelper {
     // this is to remove the outliers
     const trimmed_arr = sorted_arr1.slice(cutoff, referenceArr.length - cutoff);
     const sd = MathJs.std(trimmed_arr);
-
     return function (outputArr) {
       return outputArr.map((val) => val / sd);
     };
@@ -93,10 +90,9 @@ class MathHelper {
     return transposed;
   }
 
-  // find the Euclidean distance
-  // d(p,q) = sqrt((p1-q1)^2 + (p2-q2)^2 + (p3-q3)^2 + .....)
   /**
-   * TODO
+   * Find the Euclidean distance between orig and dest
+   * d(p,q) = sqrt((p1-q1)^2 + (p2-q2)^2 + (p3-q3)^2 + .....)
    * @param orig
    * @param dest
    * @returns
@@ -111,14 +107,13 @@ class MathHelper {
     }
   }
 
-  // find the distance between two matrices
-  // origSet = [arr1, arr2, arr3]
-  // destSet = [brr1, brr2, brr3]
-  // distanceMatrix = [dist(arr1, brr1), dist(arr1, brr2), dist(arr1, brr3)
-  //                   dist(arr2, brr1), dist(arr2, brr2), dist(arr2, brr3)
-  //                   dist(arr3, brr1), dist(arr3, brr2), dist(arr3, brr3)]
   /**
-   * TODO
+   * find the distance between two matrices
+   * origSet = [arr1, arr2, arr3]
+   * destSet = [brr1, brr2, brr3]
+   * distanceMatrix = [dist(arr1, brr1), dist(arr1, brr2), dist(arr1, brr3)
+   *                   dist(arr2, brr1), dist(arr2, brr2), dist(arr2, brr3)
+   *                   dist(arr3, brr1), dist(arr3, brr2), dist(arr3, brr3)]
    * @param origSet
    * @param destSet
    * @returns
@@ -197,13 +192,12 @@ class MathHelper {
     return expandedSet;
   }
 
-  // https://en.wikipedia.org/wiki/Weighted_least_squares
-
   /**
-   * TODO
-   * @param predictors
-   * @param response
-   * @param weights
+   * https://en.wikipedia.org/wiki/Weighted_least_squares
+   * 
+   * @param predictors: X
+   * @param response: y
+   * @param weights: W
    * @returns
    */
   static weightedLeastSquare(

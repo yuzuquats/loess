@@ -4,13 +4,22 @@ type LoessOptions = {
   // degree: [0, 1, 2] || ['constant', 'linear', 'quadratic'], // default 2
   degree: 0 | 1 | 2 | "constant" | "linear" | "quadratic";
   normalize?: boolean; // default true if degree > 1, false otherwise
-  robust: boolean; // default false
+  robust?: boolean; // default false
   iterations?: number; //default 4 if robust = true, 1 otherwise
 };
 
 class Loess {
   options: LoessOptions;
-  x: Array<Array<number>>;
+  x: matrix;
+  normalization!: Arr1ToArr1[];
+  expandedX: matrix;
+  transposedX: matrix;
+  w: number[];
+  bandwidth: number;
+  y: number[];
+  n: number;
+  d: number;
+  degree: number;
 
   constructor(
     data: {
@@ -30,93 +39,150 @@ class Loess {
 
     const model = validateModel(data, options);
     this.x = model.x;
+    this.y = model.y;
+    this.w = model.w;
+    this.n = model.n;
+    this.d = model.d;
+    this.bandwidth = model.bandwidth;
 
-    if (this.options.normalize)
+    this.degree = typeof this.options.degree === "string"
+      ? ["constant", "linear", "quadratic"].indexOf(this.options.degree) 
+      : this.options.degree;
+
+    if (!this.options.normalize) {
+      this.options.normalize = this.degree > 1 ? true : false;
+    }
+
+    // generate normalization function with fixed standard deviation
+    if (this.options.normalize) 
       this.normalization = this.x.map(MathHelper.normalize);
 
     this.expandedX = MathHelper.polynomialExpansion(
       this.x,
-      this.options.degree
+      this.degree
     );
     const normalized = this.normalization
       ? this.x.map((x, idx) => this.normalization[idx](x))
       : this.x;
+  
     this.transposedX = MathHelper.transpose(normalized);
   }
 
-  predict(data: { x: Array<number>; x2: Array<number> }): {
+  train() {
+    const fit = MathHelper.weightedLeastSquare(this.x, this.y, this.w);
+    console.log(fit); 
+  }
+  
+  /**
+   * https://towardsdatascience.com/iterated-reweighted-least-squares-and-glms-explained-9c0cc0063526
+   * Iterated Reweighted Least Squares
+   * @param data 
+   * @returns 
+   */
+  predict(data?: {x: Array<number>; x2?: Array<number>}): {
     fitted: Array<number>;
-    halfwidth: Array<number>;
-  } {
+    betas: Array<number>;
+    weights: Array<number>;
+    halfwidth?: Array<number>;
+  } 
+  {
     const { x_new, n } = validatePredict.bind(this)(data);
-
-    const expandedX = MathHelper.polynomialExpansion(
+    const newExpandedX = MathHelper.polynomialExpansion(
       x_new,
-      this.options.degree
+      this.degree
     );
-    const normalized = this.normalization
+
+    // compute normalized x_new using the same normaliztion function generated using x
+    const newNormalized = this.normalization
       ? x_new.map((x, idx) => this.normalization[idx](x))
       : x_new;
-    const distM = MathHelper.distMatrix(
-      transpose(normalized),
-      this.transposedX
-    );
+  
+    const newTransposedX = MathHelper.transpose(newNormalized);  
+
+    // compute the distance between x and x_new
+    const distM = MathHelper.distMatrix(newTransposedX, this.transposedX);
     const weightM = MathHelper.weightMatrix(distM, this.w, this.bandwidth);
 
-    let fitted, residuals, weights, betas;
-    function iterate(wt) {
-      fitted = [];
-      residuals = [];
-      betas = [];
-      weights = math.dotMultiply(wt, weightM);
-      MathHelper.transpose(expandedX).forEach((point, idx) => {
-        const fit = weightedLeastSquare(this.expandedX, this.y, weights[idx]);
+    const thisExpandedX = this.expandedX;
+    const thisY = this.y;
+    const thisN = this.n;
+
+    //let fitted: any[], residuals: any[], weights: any[], betas: any[];
+    var fitted: any[] = [];
+    var residuals: any[] = [];
+    var weights: any[] = [];
+    var betas: any[] = [];
+
+    function iterate(wt: matrix) {  
+      weights = MathJs.dotMultiply(wt, weightM);
+      MathHelper.transpose(newExpandedX).forEach((point, idx) => {
+        const fit = MathHelper.weightedLeastSquare(thisExpandedX, thisY, weights[idx]);
         if (fit.error) {
-          const sumWeights = math.sum(weights[idx]);
+          // predict future y as the weighted average of historical y value, independent of X
+          const sumWeights: number = MathJs.sum(weights[idx]);
+
+          // mle: maximum likelihood estimation: weighted average of Y
           const mle =
             sumWeights === 0
               ? 0
-              : MathJs.multiply(this.y, weights[idx]) / sumWeights;
-          fit.beta = MathJs.zeros(this.expandedX.length).set([0], mle);
-          fit.residual = math.subtract(this.y, mle);
+              : MathJs.multiply(thisY, weights[idx]) / sumWeights;
+
+          // y = aX + b where a = 0, b = mle    
+          //fit.beta = MathJs.zeros(thisExpandedX.length).set([0], mle);
+          fit.beta = MathJs.zeros(thisExpandedX.length);
+          fit.beta._data[0] = mle;
+
+          //fit.residual = MathJs.subtract(thisY, mle);
+          fit.residual = thisY.map(e => e - mle);
         }
-        fitted.push(math.squeeze(math.multiply(point, fit.beta)));
+        fitted.push(MathJs.squeeze(MathJs.multiply(point, fit.beta)));
         residuals.push(fit.residual);
         betas.push(fit.beta.toArray());
-        const median = math.median(math.abs(fit.residual));
-        wt[idx] = fit.residual.map((r) => weightFunc(r, 6 * median, 2));
+        const median = MathJs.median(MathJs.abs(fit.residual));
+        wt[idx] = fit.residual.map((r) => MathHelper.weightFunc(r, 6 * median, 2));
       });
     }
 
-    const robustWeights = Array(n).fill(math.ones(this.n));
-    for (let iter = 0; iter < this.options.iterations; iter++)
+    //const robustWeights = MathJs.ones(n, thisN); 
+    const robustWeights = Array(n).fill(MathJs.ones(thisN));
+
+    var iterations: number;
+    if (this.options.iterations)
+      iterations = this.options.iterations
+    else  
+      iterations = this.options.robust == true ? 4 : 1 
+
+    for (let iter = 0; iter < iterations; iter++)
       iterate.bind(this)(robustWeights);
-
-    const output = { fitted, betas, weights };
-
+    
+    const output = { fitted, betas, weights};
     if (this.options.band) {
       const z = gaussian(0, 1).ppf(1 - (1 - this.options.band) / 2);
       const halfwidth = weights.map((weight, idx) => {
-        const V1 = math.sum(weight);
-        const V2 = math.multiply(weight, weight);
+        const V1: number = MathJs.sum(weight);
+        const V2: number = MathJs.multiply(weight, weight);
         const intervalEstimate = Math.sqrt(
-          math.multiply(math.square(residuals[idx]), weight) / (V1 - V2 / V1)
+          MathJs.multiply(MathJs.square(residuals[idx]), weight) / (V1 - V2 / V1)
         );
         return intervalEstimate * z;
       });
       Object.assign(output, { halfwidth });
-    }
-
+    } 
     return output;
   }
 
-  grid(cuts) {
+  /**
+   * 
+   * @param cuts 
+   * @returns 
+   */
+  grid(cuts: Array<number>) {
     validateGrid.bind(this)(cuts);
 
     const x_new = [];
     const x_cuts = [];
     this.x.forEach((x, idx) => {
-      const x_sorted = sort(x);
+      const x_sorted = MathJs.sort(x);
       const x_min = x_sorted[0];
       const x_max = x_sorted[this.n - 1];
       const width = (x_max - x_min) / (cuts[idx] - 1);
