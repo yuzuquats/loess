@@ -27,6 +27,13 @@ const MathJs: {
   euclideanDist: (orig: arr1d, dest: arr1d) => number;
   distMatrix: (origSet: matrix, destSet: matrix) => matrix;
   round: <T>(x: T, y: number) => T;
+  abs: (x: Array<number>) => Array<number>;
+  median: (x: Array<number>) => number;
+  zeros: (length: number) => Array<number>;
+  ones: (m: number, n: number) => MathJsMatrix;
+  square: (x: Array<number>) => Array<number>;
+  sort: (x: arr1d) => arr1d;
+  size: (x: matrix) => arr1d;
 } =
   // @ts-ignore
   math;
@@ -62,27 +69,12 @@ class MathHelper {
    */
   static normalize(referenceArr: arr1d): Arr1ToArr1 {
     const cutoff = Math.ceil(0.1 * referenceArr.length);
-    console.log("cutoff", cutoff);
-
-    const sorted_arr = referenceArr.sort();
-    console.log(sorted_arr);
-
-    function sortNumber(a: number, b: number) {
-      return a - b;
-    }
-    const sorted_arr1 = referenceArr.sort(sortNumber);
-    console.log(sorted_arr1);
-
-    // const trimmed_arr = referenceArr
-    //  .sort()
-    //  .slice(cutoff, referenceArr.length - cutoff);
+    let sorted_arr1 = [...referenceArr].sort((a, b) => a - b);
 
     // this is to remove the outliers
     const trimmed_arr = sorted_arr1.slice(cutoff, referenceArr.length - cutoff);
-    console.log("trimmed_arr", trimmed_arr);
-
     const sd = MathJs.std(trimmed_arr);
-    console.log("sd", sd);
+
     return function (outputArr) {
       return outputArr.map((val) => val / sd);
     };
@@ -158,14 +150,13 @@ class MathHelper {
     }
 
     return distMat.map((distVect) => {
-      const sorted = zip([distVect, inputWeights]).sort((v) => v[0]);
 
-      const zipped = zip([distVect, inputWeights]);
-      console.log("zipped:", zipped);
-      console.log("sorted:", sorted);
+      let distVect_copy = [...distVect];
+      let inputWeights_copy = [...inputWeights];
 
+      //const sorted = zip([distVect, inputWeights]).sort(v => v[0]);
+      const sorted = zip([distVect_copy, inputWeights_copy]).sort(([a1,a2], [b1,b2]) => a1 - b1);
       const cutoff: number = MathJs.sum(inputWeights) * bandwidth;
-      console.log("cutoff:", cutoff);
 
       let sumOfWeights = 0;
       let cutoffIndex = sorted.findIndex((v) => {
@@ -189,8 +180,8 @@ class MathHelper {
    * @param degree
    * @returns
    */
-  static polynomialExpansion(factors: matrix, degree: number): matrix {
-    const expandedSet: matrix = [];
+  static polynomialExpansion <T>(factors: Array<T>, degree: number): Array<T> {
+    const expandedSet: Array<T> = [];
     let constTerm: number | arr1d = 1;
     if (Array.isArray(factors[0])) constTerm = Array(factors[0].length).fill(1);
     function crossMultiply(accumulator, pointer, n) {
