@@ -179,8 +179,8 @@ class Loess {
   grid(cuts: Array<number>) {
     validateGrid.bind(this)(cuts);
 
-    const x_new = [];
-    const x_cuts = [];
+    const x_new: Array<Array<number>> = [];
+    const x_cuts: Array<Array<number>> = [];
     this.x.forEach((x, idx) => {
       const x_sorted = MathJs.sort(x);
       const x_min = x_sorted[0];
@@ -198,7 +198,7 @@ class Loess {
       for (let i = 0; i < repeats; i++) {
         x_new[idx] = x_new[idx].concat(
           x_cuts[idx].reduce(
-            (acc, cut) => acc.concat(Array(copies).fill(cut)),
+            (acc: Array<number>, cut: number) => acc.concat(Array(copies).fill(cut)),
             []
           )
         );
