@@ -35,22 +35,10 @@ class MathHelper {
      */
     static normalize(referenceArr) {
         const cutoff = Math.ceil(0.1 * referenceArr.length);
-        console.log("cutoff", cutoff);
-        const sorted_arr = referenceArr.sort();
-        console.log(sorted_arr);
-        function sortNumber(a, b) {
-            return a - b;
-        }
-        const sorted_arr1 = referenceArr.sort(sortNumber);
-        console.log(sorted_arr1);
-        // const trimmed_arr = referenceArr
-        //  .sort()
-        //  .slice(cutoff, referenceArr.length - cutoff);
+        let sorted_arr1 = [...referenceArr].sort((a, b) => a - b);
         // this is to remove the outliers
         const trimmed_arr = sorted_arr1.slice(cutoff, referenceArr.length - cutoff);
-        console.log("trimmed_arr", trimmed_arr);
         const sd = MathJs.std(trimmed_arr);
-        console.log("sd", sd);
         return function (outputArr) {
             return outputArr.map((val) => val / sd);
         };
@@ -114,12 +102,11 @@ class MathHelper {
             });
         }
         return distMat.map((distVect) => {
-            const sorted = zip([distVect, inputWeights]).sort((v) => v[0]);
-            const zipped = zip([distVect, inputWeights]);
-            console.log("zipped:", zipped);
-            console.log("sorted:", sorted);
+            let distVect_copy = [...distVect];
+            let inputWeights_copy = [...inputWeights];
+            //const sorted = zip([distVect, inputWeights]).sort(v => v[0]);
+            const sorted = zip([distVect_copy, inputWeights_copy]).sort(([a1, a2], [b1, b2]) => a1 - b1);
             const cutoff = MathJs.sum(inputWeights) * bandwidth;
-            console.log("cutoff:", cutoff);
             let sumOfWeights = 0;
             let cutoffIndex = sorted.findIndex((v) => {
                 sumOfWeights += v[1];
