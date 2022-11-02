@@ -158,6 +158,7 @@ function validatePredict(data) {
   const x_new = [x];
   const n = x.length;
 
+  // x's dimension
   if (this.d > 1) {
     validateIsArray(x2, "Invalid type: x2 should be an array");
     x2.forEach((v) =>

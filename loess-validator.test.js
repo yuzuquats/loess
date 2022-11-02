@@ -46,9 +46,6 @@ function runLoessValidatorTests1() {
         ],
     };
     const w = data.NOx.map(() => Math.random() * 10);
-    console.log('runLoessValidatorTests1: w:', w);
     const fit = new Loess({ y: data.NOx, x: data.E, w }, { span: 0.8, band: 0.8, degree: 'quadratic' });
-    const grid = fit.grid([30]);
-    console.log(grid);
     console.log(JSON.stringify(fit.predict(fit.grid([30]))));
 }

@@ -59,7 +59,6 @@ function drawGraph(x, y, graph_type, title) {
 function main() {
     //drawGraph(GAS_DATA.NOx, GAS_DATA.E, 'scatter', 'GAS');
     //runMathHelperTests();
-    //gaussian(1,1);
     runLoessValidatorTests1();
 }
 main();

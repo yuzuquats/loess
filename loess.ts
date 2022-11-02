@@ -161,9 +161,14 @@ class Loess {
       const halfwidth = weights.map((weight, idx) => {
         const V1: number = MathJs.sum(weight);
         const V2: number = MathJs.multiply(weight, weight);
+
+        //const intervalEstimate = Math.sqrt(
+        //  MathJs.multiply(MathJs.square(residuals[idx]), weight) / (V1 - V2 / V1)
+        //);
+
         const intervalEstimate = Math.sqrt(
-          MathJs.multiply(MathJs.square(residuals[idx]), weight) / (V1 - V2 / V1)
-        );
+          MathJs.multiply(residuals[idx].map(r => MathJs.square(r)), weight) / (V1 - V2 / V1)
+        );        
         return intervalEstimate * z;
       });
       Object.assign(output, { halfwidth });

@@ -48,7 +48,8 @@ function runLoessValidatorTests1()
       0.665, 0.701, 0.71, 0.767, 0.801, 0.807, 0.825, 0.831, 0.891, 0.902, 0.928,
       0.97, 0.973, 0.98, 0.997, 1.0, 1.021, 1.045, 1.074, 1.089, 1.148, 1.224,
     ],
-  };  
+  };
+
   const w = data.NOx.map(() => Math.random() * 10)
   const fit = new Loess({y: data.NOx, x: data.E, w}, {span: 0.8, band: 0.8, degree: 'quadratic'})
   console.log(JSON.stringify(fit.predict(fit.grid([30]))))
