@@ -63,7 +63,8 @@ function drawGraph(x: arr1d, y: arr1d, graph_type: string, title: string) {
 function main() {
   //drawGraph(GAS_DATA.NOx, GAS_DATA.E, 'scatter', 'GAS');
   //runMathHelperTests();
-  runLoessValidatorTests1();
+  //runLinearLoessTest();
+  runQuadraticLoessTest();
 
 }
 

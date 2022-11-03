@@ -15,6 +15,7 @@ const MathJs: {
   sum: <T>(array: Array<T>) => T;
   multiply: <T>(x: T, y: T) => T;
   subtract: <T>(x: T, y: T) => T;
+  square: <T>(x: T) => T;
   squeeze: <T>(x: T) => T;
   inv: <T>(x: T) => T;
   matrix: <T>(m: Array<T>) => MathJsMatrix;
@@ -32,7 +33,6 @@ const MathJs: {
   zeros: (length: number) => Array<number>;
   ones: (m: number) => Array<number>;
   //ones: (m: number, n: number) => MathJsMatrix;
-  square: (x: Array<number>) => Array<number>;
   sort: (x: arr1d) => arr1d;
   size: (x: matrix) => arr1d;
 } =

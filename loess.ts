@@ -70,7 +70,7 @@ class Loess {
 
   train() {
     const fit = MathHelper.weightedLeastSquare(this.x, this.y, this.w);
-    console.log(fit); 
+    return fit;
   }
   
   /**
@@ -83,6 +83,7 @@ class Loess {
     fitted: Array<number>;
     betas: Array<number>;
     weights: Array<number>;
+    residuals: Array<number>;
     halfwidth?: Array<number>;
   } 
   {
@@ -155,7 +156,7 @@ class Loess {
     for (let iter = 0; iter < iterations; iter++)
       iterate.bind(this)(robustWeights);
     
-    const output = { fitted, betas, weights};
+    const output = { fitted, betas, residuals, weights};
     if (this.options.band) {
       const z = gaussian(0, 1).ppf(1 - (1 - this.options.band) / 2);
       const halfwidth = weights.map((weight, idx) => {
