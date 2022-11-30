@@ -88,3 +88,21 @@ node math-helper.test.mjs
 
    tsc;node math-wasm.test.mjs
    ```
+
+---
+
+## Future
+
+Convert MathJs to Rust for 1d/scalar values
+
+Convert MathHelper to Rust
+
+Convert Gaussian to Rust
+
+Convert Loess to Rust
+
+Use ndarray in math-wasm
+(https://github.com/rust-ndarray/ndarray/blob/master/README-quick-start.md)
+(https://docs.rs/ndarray/latest/ndarray/)
+
+Remove std dependency from math-wasm
