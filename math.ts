@@ -59,7 +59,7 @@ class MathHelper {
   static weightFunc(d: number, dmax: number, degree: number): number {
     return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
   }
- 
+
   /**
    * Normalize an array such that its standard deviation is 1
    * @param referenceArr
@@ -145,12 +145,13 @@ class MathHelper {
     }
 
     return distMat.map((distVect) => {
-
       let distVect_copy = [...distVect];
       let inputWeights_copy = [...inputWeights];
 
       //const sorted = zip([distVect, inputWeights]).sort(v => v[0]);
-      const sorted = zip([distVect_copy, inputWeights_copy]).sort(([a1,a2], [b1,b2]) => a1 - b1);
+      const sorted = zip([distVect_copy, inputWeights_copy]).sort(
+        ([a1, a2], [b1, b2]) => a1 - b1
+      );
       const cutoff: number = MathJs.sum(inputWeights) * bandwidth;
 
       let sumOfWeights = 0;
@@ -175,7 +176,7 @@ class MathHelper {
    * @param degree
    * @returns
    */
-  static polynomialExpansion <T>(factors: Array<T>, degree: number): Array<T> {
+  static polynomialExpansion<T>(factors: Array<T>, degree: number): Array<T> {
     const expandedSet: Array<T> = [];
     let constTerm: number | arr1d = 1;
     if (Array.isArray(factors[0])) constTerm = Array(factors[0].length).fill(1);
@@ -194,7 +195,7 @@ class MathHelper {
 
   /**
    * https://en.wikipedia.org/wiki/Weighted_least_squares
-   * 
+   *
    * @param predictors: X
    * @param response: y
    * @param weights: W
@@ -204,7 +205,7 @@ class MathHelper {
     predictors: matrix,
     response: arr1d,
     weights: arr1d
-  ) {
+  ): TODOTYPE {
     try {
       const weightedY = MathJs.matrix(MathJs.dotMultiply(weights, response));
 

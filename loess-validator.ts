@@ -3,7 +3,7 @@
  * @param target
  * @param msg
  */
-function validateIsArray(target, msg) {
+function validateIsArray(target: TODOTYPE, msg: TODOTYPE) {
   if (!Array.isArray(target)) throw new Error(msg);
 }
 
@@ -12,7 +12,7 @@ function validateIsArray(target, msg) {
  * @param target
  * @param msg
  */
-function validateIsNumber(target, msg) {
+function validateIsNumber(target: TODOTYPE, msg: TODOTYPE) {
   if (typeof target !== "number") throw new Error(msg);
 }
 
@@ -21,7 +21,7 @@ function validateIsNumber(target, msg) {
  * @param target
  * @param msg
  */
-function validateIsInteger(target, msg) {
+function validateIsInteger(target: TODOTYPE, msg: TODOTYPE) {
   validateIsNumber(target, msg);
   if (target - Math.floor(target) > 0) throw new Error(msg);
 }
@@ -38,7 +38,7 @@ function validateModel(
     x2?: Array<number>;
     w?: Array<number>;
   },
-  options
+  options: TODOTYPE
 ) {
   if (!data) throw new Error("no data passed in to constructor");
   if (typeof data !== "object")
@@ -143,7 +143,7 @@ function validateModel(
  * @param target
  * @param msg
  */
-function validatePredict(data) {
+function validatePredict(data: TODOTYPE): TODOTYPE {
   if (!data) data = { x: this.x[0], x2: this.x[1] };
   if (typeof data !== "object")
     throw new Error("Invalid type: data should be supplied as an object");
@@ -177,7 +177,7 @@ function validatePredict(data) {
  * @param target
  * @param msg
  */
-function validateGrid(cuts) {
+function validateGrid(cuts: TODOTYPE): TODOTYPE {
   validateIsArray(cuts, "Invalid type: cuts should be an array");
   cuts.forEach((cut) => {
     validateIsInteger(cut, "Invalid type: cuts should include only integers");

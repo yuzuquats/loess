@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "ESNext",
-    "declaration": false,
-    "noImplicitAny": true,
-    "removeComments": false,
-    "noLib": false,
+    "target": "es6",
+    "module": "es6",
     "moduleResolution": "nodenext",
     "lib": [
       "es2017",
@@ -13,20 +9,22 @@
       "DOM.Iterable"
     ],
     "strict": true,
-    /**
-     * baseUrl + paths are needed so as to allow for module resolution with 
-     * a leading slash
-     *
-     * context: https://github.com/microsoft/TypeScript/issues/13730
-     */
+    // "typeRoots": [
+    //   "**/*.d.ts",
+    // ],
     "baseUrl": ".",
     "paths": {
-      "/*": [
-        "./*"
+      "/assert.js": [
+        "./assert.ts",
+        "./assert.d.ts"
       ]
-    }
+    },
+    "declaration": false,
+    "allowJs": false,
+    "checkJs": false,
   },
   "include": [
+    // "**/*.d.ts",
     "**/*.ts",
     "**/*.mts"
   ],

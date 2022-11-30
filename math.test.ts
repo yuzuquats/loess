@@ -9,7 +9,7 @@ function testWeightFunction__(
 }
 
 function testWeightFunction() {
-  console.log('ENTRY: testWeightFunc');  
+  console.log("ENTRY: testWeightFunc");
   testWeightFunction__(2, 5, 3, 0.8200258559999998);
   testWeightFunction__(3, 5, 3, 0.48189030400000005);
   testWeightFunction__(4, 5, 3, 0.11621427199999991);
@@ -20,39 +20,42 @@ function testWeightFunction() {
   const v1 = MathHelper.weightFunc(0.5, 1, 3);
   assertEqFloat(MathHelper.weightFunc(0.5, 1, 3), 0.669921875);
   assertEqFloat(MathHelper.weightFunc(0.5, 1, 2), 0.5625);
-  
+
   //should return 0 if d >= dmax
   assertEqFloat(MathHelper.weightFunc(1, 1, 3), 0);
   assertEqFloat(MathHelper.weightFunc(1, 1, 2), 0);
-  console.log('EXIT: testWeightFunc');      
+  console.log("EXIT: testWeightFunc");
 }
 
 function testNormalization() {
-  console.log('ENTRY: testNormalize');       
+  console.log("ENTRY: testNormalize");
   const caseOne = {
     test: [109, 8, 7, 6, 5, 4, 3, 2, 1, -100],
-    expect: [44.499, 3.266, 2.858, 2.449, 2.041, 1.633, 1.225, 0.816, 0.408, -40.825]
-  }
+    expect: [
+      44.499, 3.266, 2.858, 2.449, 2.041, 1.633, 1.225, 0.816, 0.408, -40.825,
+    ],
+  };
 
   // should return array divided by 10% trimmed sample deviation
   const normalizedArr = MathHelper.normalize(caseOne.test)(caseOne.test);
   const val = MathJs.round(normalizedArr, 3);
-  assertEqFloatArr(val, caseOne.expect)
-  
+  assertEqFloatArr(val, caseOne.expect);
+
   const caseTwo = {
     test: [
-      0.665, 0.701, 0.71, 0.767, 0.801, 0.807, 0.825, 0.831, 0.891, 0.902, 0.928,
-      0.97, 0.973, 0.98, 0.997, 1.0, 1.021, 1.045, 1.074, 1.089, 1.148, 1.224,
+      0.665, 0.701, 0.71, 0.767, 0.801, 0.807, 0.825, 0.831, 0.891, 0.902,
+      0.928, 0.97, 0.973, 0.98, 0.997, 1.0, 1.021, 1.045, 1.074, 1.089, 1.148,
+      1.224,
     ],
-  }
+  };
   const normalizedArr2 = MathHelper.normalize(caseTwo.test)(caseTwo.test);
   console.log(normalizedArr2);
 
-  console.log('EXIT: testNormalize'); 
+  console.log("EXIT: testNormalize");
 }
 
 function testTranspose() {
-  console.log('ENTRY: testTranspose');  
+  console.log("ENTRY: testTranspose");
   const y: matrix = MathHelper.transpose([
     [1, 2, 3],
     [4, 5, 6],
@@ -62,43 +65,46 @@ function testTranspose() {
   assertEqFloatArr(y[2], [3, 6]);
 
   const caseOne = {
-  test: [
-    [1, 2, 3, 4, 5],
-    [6, 7, 8, 9, 10]
-  ],
-  expect: [
-    [1, 6],
-    [2, 7],
-    [3, 8],
-    [4, 9],
-    [5, 10]
-  ]
-}
+    test: [
+      [1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10],
+    ],
+    expect: [
+      [1, 6],
+      [2, 7],
+      [3, 8],
+      [4, 9],
+      [5, 10],
+    ],
+  };
 
-// should return transposed matrix'
-const actual = MathHelper.transpose(caseOne.test)
-assertEqFloatArr(actual[0], caseOne.expect[0]);
-assertEqFloatArr(actual[1], caseOne.expect[1]);
-assertEqFloatArr(actual[2], caseOne.expect[2]);
-assertEqFloatArr(actual[3], caseOne.expect[3]);
-assertEqFloatArr(actual[4], caseOne.expect[4]);        
-console.log('EXIT: testTranspose');   
+  // should return transposed matrix'
+  const actual = MathHelper.transpose(caseOne.test);
+  assertEqFloatArr(actual[0], caseOne.expect[0]);
+  assertEqFloatArr(actual[1], caseOne.expect[1]);
+  assertEqFloatArr(actual[2], caseOne.expect[2]);
+  assertEqFloatArr(actual[3], caseOne.expect[3]);
+  assertEqFloatArr(actual[4], caseOne.expect[4]);
+  console.log("EXIT: testTranspose");
 }
 
 function testEuclideanDist() {
-  console.log('ENTRY: testEuclideanDist'); 
+  console.log("ENTRY: testEuclideanDist");
   const orig: arr1d = [1, 2];
   const dest: arr1d = [4, 6];
   const y: number = MathHelper.euclideanDist(orig, dest);
   assertEqFloat(y, 5);
-   
+
   // should return Euclidean distance between two vectors
-  assertEqFloat(MathJs.round(MathHelper.euclideanDist([1, 2, 3], [4, 5, 6]), 3), 5.196);
-  console.log('EXIT: testEuclideanDist');   
+  assertEqFloat(
+    MathJs.round(MathHelper.euclideanDist([1, 2, 3], [4, 5, 6]), 3),
+    5.196
+  );
+  console.log("EXIT: testEuclideanDist");
 }
 
 function testDistMatrix() {
-  console.log('ENTRY: testDistMatrix'); 
+  console.log("ENTRY: testDistMatrix");
   const origSet: matrix = [[1, 1]];
   const destSet: matrix = [[4, 5]];
   const val: matrix = MathHelper.distMatrix(origSet, destSet);
@@ -124,24 +130,27 @@ function testDistMatrix() {
     coordinates: [
       [1, 1],
       [4, 1],
-      [4, 5]
+      [4, 5],
     ],
     expect: [
       [0, 3, 5],
       [3, 0, 4],
-      [5, 4, 0]
-    ]
-  }
+      [5, 4, 0],
+    ],
+  };
   // should return matrix of Euclidean distance between pairs of points
-  const actual = MathHelper.distMatrix(caseOne.coordinates, caseOne.coordinates);
+  const actual = MathHelper.distMatrix(
+    caseOne.coordinates,
+    caseOne.coordinates
+  );
   assertEqFloatArr(actual[0], caseOne.expect[0]);
   assertEqFloatArr(actual[1], caseOne.expect[1]);
-  assertEqFloatArr(actual[2], caseOne.expect[2]);    
-  console.log('EXIT: testDistMatrix');   
+  assertEqFloatArr(actual[2], caseOne.expect[2]);
+  console.log("EXIT: testDistMatrix");
 }
 
 function testWeightMatrix() {
-  console.log('ENTRY: testWeightMatrix');  
+  console.log("ENTRY: testWeightMatrix");
   const distMat1: matrix = [
     [1, 2, 3],
     [4, 5, 6],
@@ -151,60 +160,68 @@ function testWeightMatrix() {
   const val = MathHelper.weightMatrix(distMat1, inputWeights, bandwidth);
   console.log(val);
 
-  const distMat = [
-    [5, 4, 3, 2, 1]
-  ]
+  const distMat = [[5, 4, 3, 2, 1]];
 
   const caseOne = {
     inputWeights: [1, 1, 1, 1, 1],
     bandwidth: 0.6,
-    expect: [
-      [0, 0, 0, 0.348, 0.893]
-    ]
-  }
+    expect: [[0, 0, 0, 0.348, 0.893]],
+  };
   const caseTwo = {
     inputWeights: [1, 1, 1, 1, 1],
     bandwidth: 2,
-    expect: [
-      [0.67, 0.82, 0.921, 0.976, 0.997]
-    ]
-  }
+    expect: [[0.67, 0.82, 0.921, 0.976, 0.997]],
+  };
 
   // span <= 1
-  const actual = MathHelper.weightMatrix(distMat, caseOne.inputWeights, caseOne.bandwidth);
+  const actual = MathHelper.weightMatrix(
+    distMat,
+    caseOne.inputWeights,
+    caseOne.bandwidth
+  );
   actual[0] = MathJs.round(actual[0], 3);
   assertEqFloatArr(actual[0], caseOne.expect[0]);
-  
+
   // span > 1
-  const actual2 = MathHelper.weightMatrix(distMat, caseTwo.inputWeights, caseTwo.bandwidth)
-  actual2[0] = MathJs.round(actual2[0], 3)
+  const actual2 = MathHelper.weightMatrix(
+    distMat,
+    caseTwo.inputWeights,
+    caseTwo.bandwidth
+  );
+  actual2[0] = MathJs.round(actual2[0], 3);
   assertEqFloatArr(actual2[0], caseTwo.expect[0]);
-  console.log('EXIT: testWeightMatrix');    
+  console.log("EXIT: testWeightMatrix");
 }
 
 function testPolynomialExpansion() {
-  console.log('ENTRY: testPolynomialExpansion');      
+  console.log("ENTRY: testPolynomialExpansion");
   // (a + b + c)^0 >>> (1) {
-  const actual1 = MathHelper.polynomialExpansion([1, 2, 3], 0); 
+  const actual1 = MathHelper.polynomialExpansion([1, 2, 3], 0);
   assertEqFloatArr(actual1, [1]);
-  
+
   // (a + b + c)^1 >>> (1 + a + b + c)
   const actual2 = MathHelper.polynomialExpansion([1, 2, 3], 1);
   assertEqFloatArr(actual2, [1, 1, 2, 3]);
-  
+
   // (a + b + c)^2 >>> (1 + a + b + c + a2 + ab + ac + b2 + bc + c2)
   const actual3 = MathHelper.polynomialExpansion([1, 2, 3], 2);
   assertEqFloatArr(actual3, [1, 1, 2, 3, 1, 2, 3, 4, 6, 9]);
-  
+
   // should operates on arrays also
-  const actual4 = MathHelper.polynomialExpansion([[1, 2], [3, 4]], 2);
+  const actual4 = MathHelper.polynomialExpansion(
+    [
+      [1, 2],
+      [3, 4],
+    ],
+    2
+  );
   // [[1, 1], [1, 2], [3, 4], [1, 4], [3, 8], [9, 16]]);
   assertEqFloatArr(actual4[0], [1, 1]);
   assertEqFloatArr(actual4[1], [1, 2]);
   assertEqFloatArr(actual4[2], [3, 4]);
   assertEqFloatArr(actual4[3], [1, 4]);
   assertEqFloatArr(actual4[4], [3, 8]);
-  assertEqFloatArr(actual4[5], [9, 16]); 
+  assertEqFloatArr(actual4[5], [9, 16]);
 
   const factors: matrix = [
     [1, 2, 3],
@@ -247,7 +264,7 @@ function testPolynomialExpansion() {
    14: [256, 625, 1296]:  [4,5,6] ^4
   */
 
-   console.log('EXIT: testPolynomialExpansion');      
+  console.log("EXIT: testPolynomialExpansion");
 }
 
 /*
@@ -303,63 +320,69 @@ Kurtosis:                       2.177   Cond. No.                         14.1
 
 // https://www.statsmodels.org/stable/examples/notebooks/generated/wls.html
 function testWeightedLeastSquare() {
-  console.log('ENTRY: testWeightedLeastSquare');      
+  console.log("ENTRY: testWeightedLeastSquare");
   //(1) case 1, 2, 3
   const caseOne = {
     x: [
       [1, 1, 1, 1],
-      [1, 3, 5, 7]
+      [1, 3, 5, 7],
     ],
     y: [14, 17, 19, 20],
     w: [1, 1, 1, 1],
     expect: {
       beta: MathJs.matrix([13.5, 1]),
       yhat: MathJs.matrix([14.5, 16.5, 18.5, 20.5]),
-      residual: MathJs.matrix([-0.5, 0.5, 0.5, -0.5])
-    }
-  }
+      residual: MathJs.matrix([-0.5, 0.5, 0.5, -0.5]),
+    },
+  };
 
   const caseTwo = {
     x: [
       [1, 1, 1, 1],
-      [1, 3, 5, 7]
+      [1, 3, 5, 7],
     ],
     y: [14, 17, 19, 20],
     w: [1, 3, 3, 1],
     expect: {
       beta: MathJs.matrix([13.75, 1]),
       yhat: MathJs.matrix([14.75, 16.75, 18.75, 20.75]),
-      residual: MathJs.matrix([-0.75, 0.25, 0.25, -0.75])
-    }
-  }
+      residual: MathJs.matrix([-0.75, 0.25, 0.25, -0.75]),
+    },
+  };
 
   const caseThree = {
     x: [
       [1, 1, 1, 1],
-      [1, 1, 1, 1]
+      [1, 1, 1, 1],
     ],
     y: [14, 17, 19, 20],
-    w: [1, 3, 3, 1]
-  }
+    w: [1, 3, 3, 1],
+  };
 
   // should return vector of fitted parameters (w/o weights)
   const fit1 = MathHelper.weightedLeastSquare(caseOne.x, caseOne.y, caseOne.w);
-  assertEqFloatArr(fit1['beta']._data, caseOne.expect['beta']._data);
-  assertEqFloatArr(fit1['yhat']._data, caseOne.expect['yhat']._data);
-  assertEqFloatArr(fit1['residual']._data, caseOne.expect['residual']._data);  
-  
+  assertEqFloatArr(fit1["beta"]._data, caseOne.expect["beta"]._data);
+  assertEqFloatArr(fit1["yhat"]._data, caseOne.expect["yhat"]._data);
+  assertEqFloatArr(fit1["residual"]._data, caseOne.expect["residual"]._data);
 
   // should return vector of fitted parameters (with weights)
   const fit2 = MathHelper.weightedLeastSquare(caseTwo.x, caseTwo.y, caseTwo.w);
-  assertEqFloatArr(fit2['beta']._data, caseTwo.expect['beta']._data);
-  assertEqFloatArr(fit2['yhat']._data, caseTwo.expect['yhat']._data);
-  assertEqFloatArr(fit2['residual']._data, caseTwo.expect['residual']._data); 
-  
+  assertEqFloatArr(fit2["beta"]._data, caseTwo.expect["beta"]._data);
+  assertEqFloatArr(fit2["yhat"]._data, caseTwo.expect["yhat"]._data);
+  assertEqFloatArr(fit2["residual"]._data, caseTwo.expect["residual"]._data);
+
   // should return error object if x is non-invertible
-  const fit3 = MathHelper.weightedLeastSquare(caseThree.x, caseThree.y, caseThree.w);
-  console.log(fit3['error'].message);
-  assertEqual(fit3['error'].message, 'Cannot calculate inverse, determinant is zero');
-  
+  const fit3 = MathHelper.weightedLeastSquare(
+    caseThree.x,
+    caseThree.y,
+    caseThree.w
+  );
+  console.log(fit3.error?.message);
+  assertEqual(
+    fit3.error?.message,
+    "Cannot calculate inverse, determinant is zero"
+  );
+
   // case 4
   // weights and response: same dimension
   const intercept = [
@@ -398,7 +421,7 @@ function testWeightedLeastSquare() {
   assertEqFloatArr(MathJs.round(val["beta"]["_data"], 4), expected);
   drawGraph(x, response, "scatter", "WLS");
 
-  console.log('EXIT: testWeightedLeastSquare');      
+  console.log("EXIT: testWeightedLeastSquare");
 }
 
 // Reference: https://github.com/yongjun21/loess

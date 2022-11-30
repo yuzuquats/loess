@@ -20,3 +20,13 @@ Add tests to loess-validator.ts
 - Create a test function in loess-validator.test.ts and see that it runs
   Fix type errors in loess-validator.ts
   Add documentation to loess-validator.ts
+
+---
+
+5. Step 5
+
+Fix Typescript Errors
+
+6. Step 6
+
+Remove TODOTYPE with proper types

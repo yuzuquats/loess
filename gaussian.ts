@@ -1,7 +1,7 @@
 // Complementary error function
 // From Numerical Recipes in C 2e p221
 // ported from npm install loess --save
-function erfc(x: number) {
+function erfc(x: number): TODOTYPE {
   var z = Math.abs(x);
   var t = 1 / (1 + z / 2);
   var r =
@@ -30,7 +30,7 @@ function erfc(x: number) {
 
 // Inverse complementary error function
 // From Numerical Recipes 3e p265
-function ierfc(x: number) {
+function ierfc(x: number): TODOTYPE {
   if (x >= 2) {
     return -100;
   }
@@ -68,26 +68,26 @@ class Gaussian {
   }
 
   // Probability density function
-  pdf(x: number) {
+  pdf(x: number): TODOTYPE {
     var m = this.standardDeviation * Math.sqrt(2 * Math.PI);
     var e = Math.exp(-Math.pow(x - this.mean, 2) / (2 * this.variance));
     return e / m;
   }
 
   // Cumulative density function
-  cdf(x: number) {
+  cdf(x: number): TODOTYPE {
     return (
       0.5 * erfc(-(x - this.mean) / (this.standardDeviation * Math.sqrt(2)))
     );
   }
 
   // Percent point function
-  ppf(x: number) {
+  ppf(x: number): TODOTYPE {
     return this.mean - this.standardDeviation * Math.sqrt(2) * ierfc(2 * x);
   }
 
   // Product distribution of this and d (scale for constant)
-  prototype_mul(d) {
+  prototype_mul(d: TODOTYPE): TODOTYPE {
     if (typeof d === "number") {
       return this.scale(d);
     }
@@ -100,7 +100,7 @@ class Gaussian {
   }
 
   // Quotient distribution of this and d (scale for constant)
-  div(d) {
+  div(d: TODOTYPE): TODOTYPE {
     if (typeof d === "number") {
       return this.scale(1 / d);
     }
@@ -113,22 +113,22 @@ class Gaussian {
   }
 
   // Addition of this and d
-  add(d) {
+  add(d: TODOTYPE): TODOTYPE {
     return new Gaussian(this.mean + d.mean, this.variance + d.variance);
   }
 
   // Subtraction of this and d
-  sub(d) {
+  sub(d: TODOTYPE): TODOTYPE {
     return new Gaussian(this.mean - d.mean, this.variance + d.variance);
   }
 
   // Scale this by constant c
-  scale(c: number) {
+  scale(c: number): TODOTYPE {
     return new Gaussian(this.mean * c, this.variance * c * c);
   }
 
   // Generate [num] random samples
-  random(num) {
+  random(num: TODOTYPE): TODOTYPE {
     let mean = this.mean;
     let std = this.standardDeviation;
     return Array(num)
@@ -143,6 +143,6 @@ function gaussian(mean: number, variance: number): Gaussian {
   return new Gaussian(mean, variance);
 }
 
-function fromPrecisionMean(precision: number, precisionmean: number) {
+function fromPrecisionMean(precision: number, precisionmean: number): TODOTYPE {
   return new Gaussian(precisionmean / precision, 1 / precision);
 }

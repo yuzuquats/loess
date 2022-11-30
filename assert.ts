@@ -1,14 +1,10 @@
-const assert = (window["assert"] = (test: boolean, message: string) => {
+window.assert = (test: boolean, message: string) => {
   if (!test) {
     console.error(message);
   }
-});
+};
 
-const assertEqual = (window["assertEqual"] = (
-  a: any,
-  b: any,
-  message?: string
-) => {
+window.assertEqual = (a: any, b: any, message?: string) => {
   if (a != b) {
     if (message) {
       console.error(`'${a}' != '${b}'`);
@@ -16,13 +12,9 @@ const assertEqual = (window["assertEqual"] = (
       console.error(`'${a}' != '${b}'`, message);
     }
   }
-});
+};
 
-const assertEqFloat = (window["assertEqFloat"] = (
-  a: any,
-  b: any,
-  message?: string
-) => {
+window.assertEqFloat = (a: number, b: number, message?: string) => {
   if (Math.abs(a - b) > Number.EPSILON) {
     if (message) {
       console.error(`'${a}' != '${b}'`);
@@ -30,13 +22,8 @@ const assertEqFloat = (window["assertEqFloat"] = (
       console.error(`'${a}' != '${b}'`, message);
     }
   }
-});
-
-const assertEqFloatArr = (window["assertEqFloatArr"] = (
-  a: arr1d,
-  b: arr1d,
-  message?: string
-) => {
+};
+window.assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
   function zip(arrays: [arr1d, arr1d]) {
     return arrays[0].map(function (_, i) {
       return arrays.map(function (array) {
@@ -47,4 +34,4 @@ const assertEqFloatArr = (window["assertEqFloatArr"] = (
 
   const zipped = zip([a, b]);
   zipped.forEach((e) => assertEqFloat(e[0], e[1], message));
-});
+};
