@@ -41,6 +41,11 @@ pub fn std(values: Vec<f32>) -> f32 {
     f32::sqrt(variance)
 }
 
+#[wasm_bindgen]
+pub fn sum(values: Vec<f32>) -> f32 {
+    values.iter().fold(0.0, |a, v| a + v)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

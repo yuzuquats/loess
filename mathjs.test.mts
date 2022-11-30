@@ -13,7 +13,14 @@ function test(m: MathJsLibrary) {
       assertEqFloat(m.std([1, 1, 1, 1, 1]), 0);
     },
     dotMultiply: () => {},
-    sum: () => {},
+    sum: () => {
+      assertEqFloat(m.sum([]), 0);
+      assertEqFloat(m.sum([1]), 1);
+      assertEqFloat(m.sum([3]), 3);
+      assertEqFloat(m.sum([1, 2, 3, 4]), 10);
+      assertEqFloat(m.sum([1, 2, 3, 4, 5]), 15);
+      assertEqFloat(m.sum([1, 1, 1, 1, 1]), 5);
+    },
     multiply: () => {},
     subtract: () => {},
     square: () => {},
@@ -35,6 +42,8 @@ function test(m: MathJsLibrary) {
 
   console.log("  TEST: std");
   tests.std();
+  console.log("  TEST: sum");
+  tests.sum();
 }
 
 console.log("Testing Original Library (MathJs)");

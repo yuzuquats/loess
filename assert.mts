@@ -1,7 +1,7 @@
-import type { matrix, arr1d } from "./mathjs.mjs";
+import type { arr1d } from "./mathjs.mjs";
 
 const hasWindow = typeof window != "undefined";
-const epsilon = 1 ** -7; // Number.EPSILON
+const epsilon = Math.pow(10, -7); // Number.EPSILON
 
 const assertError = (fn: () => void) => {
   try {

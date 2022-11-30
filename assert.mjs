@@ -1,5 +1,5 @@
 const hasWindow = typeof window != "undefined";
-const epsilon = 1 ** -7; // Number.EPSILON
+const epsilon = Math.pow(10, -7); // Number.EPSILON
 const assertError = (fn) => {
     try {
         fn();

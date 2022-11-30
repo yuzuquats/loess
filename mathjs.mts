@@ -6,9 +6,6 @@ export type matrix = Array<Array<number>>;
 export type arr1d = Array<number>;
 export type Arr1ToArr1 = (i: arr1d) => arr1d;
 
-console.log(math);
-console.log(math.std);
-
 // MathJs is the public api for the math.js library publically available
 // here: https://mathjs.org
 //
