@@ -1,4 +1,13 @@
 const hasWindow = typeof window != "undefined";
+const assertError = (fn) => {
+    try {
+        fn();
+    }
+    catch {
+        return;
+    }
+    throw new Error("Error (error was not raised)");
+};
 const assert = (test, message) => {
     if (!test) {
         console.error(message);
@@ -44,4 +53,4 @@ const assertEqFloatArr = (a, b, message) => {
     zipped.forEach((e) => assertEqFloat(e[0], e[1], message));
 };
 hasWindow && (window.assertEqFloatArr = assertEqFloatArr);
-export { assert, assertEqual, assertEqFloat, assertEqFloatArr };
+export { assert, assertEqual, assertEqFloat, assertEqFloatArr, assertError };

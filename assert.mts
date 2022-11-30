@@ -2,6 +2,15 @@ import type { matrix, arr1d } from "./mathjs.mjs";
 
 const hasWindow = typeof window != "undefined";
 
+const assertError = (fn: () => void) => {
+  try {
+    fn();
+  } catch {
+    return;
+  }
+  throw new Error("Error (error was not raised)");
+};
+
 const assert = (test: boolean, message: string) => {
   if (!test) {
     console.error(message);
@@ -50,4 +59,4 @@ const assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
 };
 hasWindow && (window.assertEqFloatArr = assertEqFloatArr);
 
-export { assert, assertEqual, assertEqFloat, assertEqFloatArr };
+export { assert, assertEqual, assertEqFloat, assertEqFloatArr, assertError };
