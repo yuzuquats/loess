@@ -22,7 +22,23 @@ function test(m: MathJsLibrary) {
       assertEqFloat(m.sum([1, 1, 1, 1, 1]), 5);
     },
     multiply: () => {},
-    subtract: () => {},
+    subtract: () => {
+      assertEqFloat(m.subtract(5.3, 2), 3.3, Precision(-6));
+      assertEqFloat(m.subtract(8, 4), 4, Precision(-5));
+      assertEqFloat(m.subtract(1230123, 523), 1229600);
+      assertEqFloat(m.subtract(8.23234, 123.32423), -115.09189, Precision(-5));
+      assertEqFloat(
+        m.subtract(3123091293, 23849273482),
+        -20726182189,
+        Precision(3)
+      );
+      assertEqFloat(m.subtract(0, 0), 0);
+      // assertEqFloat(m.subtract(Number.MAX_VALUE, 0), Number.MAX_VALUE);
+      // assertEqFloat(
+      //   m.subtract(Number.MAX_VALUE, Number.MIN_VALUE),
+      //   Number.POSITIVE_INFINITY
+      // );
+    },
     square: () => {
       assertEqFloat(m.square(1), 1);
       assertEqFloat(m.square(2), 4);
@@ -53,8 +69,10 @@ function test(m: MathJsLibrary) {
   tests.std();
   console.log("  TEST: sum");
   tests.sum();
-  console.log("  TEST: sum");
+  console.log("  TEST: square");
   tests.square();
+  console.log("  TEST: subtract");
+  tests.subtract();
 }
 
 console.log("Testing Original Library (MathJs)");
