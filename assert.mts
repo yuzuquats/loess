@@ -1,7 +1,21 @@
 import type { arr1d } from "./mathjs.mjs";
 
 const hasWindow = typeof window != "undefined";
-const epsilon = Math.pow(10, -7); // Number.EPSILON
+
+export const PRECISION_FINE = Number.EPSILON;
+
+function memo<T, R>(fn: (t: T) => R, mem: Map<T, R> = new Map()): (t: T) => R {
+  return (t: T) => {
+    const r = mem.get(t);
+    if (r) return r;
+
+    const rr = fn(t);
+    mem.set(t, rr);
+    return rr;
+  };
+}
+
+export const Precision = memo((pow: number) => Math.pow(10, pow));
 
 const assertError = (fn: () => void) => {
   try {
@@ -33,8 +47,21 @@ const assertEqual = (a: any, b: any, message?: string) => {
 };
 hasWindow && (window.assertEqual = assertEqual);
 
-const assertEqFloat = (a: number, b: number, message?: string) => {
-  if (Math.abs(a - b) > epsilon) {
+const assertEqFloat = (
+  a: number,
+  b: number,
+  precision: number = Number.EPSILON,
+  message?: string
+) => {
+  if (Math.abs(a - b) > precision) {
+    const p = 1 / Math.abs(a - b);
+    const suggestedBase = -Math.floor(Math.log10(p));
+
+    console.error("\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    console.error(
+      `Try using Precision(${suggestedBase}) instead? (We should **try** to not go above Precision(0), however. Otherwise 1 == 2)`
+    );
+    console.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     if (!message) {
       console.error(a, "!=", b);
       throw new Error(`Error (assertion failed | ${a} != ${b})`);
@@ -46,7 +73,12 @@ const assertEqFloat = (a: number, b: number, message?: string) => {
 };
 hasWindow && (window.assertEqFloat = assertEqFloat);
 
-const assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
+const assertEqFloatArr = (
+  a: arr1d,
+  b: arr1d,
+  precision: number,
+  message?: string
+) => {
   function zip(arrays: [arr1d, arr1d]) {
     return arrays[0].map(function (_, i) {
       return arrays.map(function (array) {
@@ -56,7 +88,7 @@ const assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
   }
 
   const zipped = zip([a, b]);
-  zipped.forEach((e) => assertEqFloat(e[0], e[1], message));
+  zipped.forEach((e) => assertEqFloat(e[0], e[1], precision, message));
 };
 hasWindow && (window.assertEqFloatArr = assertEqFloatArr);
 

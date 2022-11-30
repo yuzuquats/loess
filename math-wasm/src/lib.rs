@@ -46,6 +46,11 @@ pub fn sum(values: Vec<f32>) -> f32 {
     values.iter().fold(0.0, |a, v| a + v)
 }
 
+#[wasm_bindgen]
+pub fn square(n: f32) -> f32 {
+    n.powf(2.0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
