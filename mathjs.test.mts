@@ -2,15 +2,15 @@ import { MathJs, type MathJsLibrary } from "./mathjs.mjs";
 import { assertEqFloat, assertError } from "./assert.mjs";
 import mathRs from "./math-wasm/pkg/math_wasm.js";
 
-function test(library: MathJsLibrary) {
+function test(m: MathJsLibrary) {
   const tests = {
     std: () => {
       // assertError(() => library.std([]));
-      assertEqFloat(library.std([1]), 0);
-      assertEqFloat(library.std([3]), 0);
-      assertEqFloat(library.std([1, 2, 3, 4]), 1.2909944487358056);
-      assertEqFloat(library.std([1, 2, 3, 4, 5]), 1.5811388300841898);
-      assertEqFloat(library.std([1, 1, 1, 1, 1]), 0);
+      assertEqFloat(m.std([1]), 0);
+      assertEqFloat(m.std([3]), 0);
+      assertEqFloat(m.std([1, 2, 3, 4]), 1.2909944487358056);
+      assertEqFloat(m.std([1, 2, 3, 4, 5]), 1.5811388300841898);
+      assertEqFloat(m.std([1, 1, 1, 1, 1]), 0);
     },
     dotMultiply: () => {},
     sum: () => {},
