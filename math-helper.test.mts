@@ -1,7 +1,7 @@
 import MathHelper from "./math-helper.mjs";
 import { assertEqFloat, assertEqFloatArr } from "./assert.mjs";
-import { MathJs } from "./math.mjs";
-import type { matrix, arr1d } from "./math.mjs";
+import { MathJs } from "./mathjs.mjs";
+import type { matrix, arr1d } from "./mathjs.mjs";
 
 function testWeightFunction__(
   d: number,

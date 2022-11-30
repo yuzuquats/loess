@@ -1,83 +1,90 @@
-1. (Done) Step 1
+# README
 
-Add tests for math.ts
+## Important
 
-2. Step 2
+Everything is migrated to node. Workflows:
 
-Download VSCode extensions for "Prettier - Code formatter"
-Download VSCode extensions for "ESLint"
-
-3. (Low priority) Step 3
-
-Add javadocs for `math.ts`. See TODOs
-
-4. Step 4
-
-Add tests to loess-validator.ts
-
-- Create a file named loess-validator.test.ts
-- Import loess-validator.test.ts to index.html (see math.test.ts)
-- Create a test function in loess-validator.test.ts and see that it runs
-  Fix type errors in loess-validator.ts
-  Add documentation to loess-validator.ts
-
----
-
-5. Step 5
-
-Fix Typescript Errors
-You can rerun tests with
+a. Compile the code to run it on the browser
 
 ```
+// cd .
+
+tsc --watch
+npm run build
+
+// macos
+open index.html
+// windows (?)
+chrome.exe index.html
+```
+
+b. Run tests
+
+```
+tsc --watch
 node mathjs.test.mjs
 node math-helper.test.mjs
 ```
 
-6. Step 6
+---
 
-Remove TODOTYPE with proper types
+## TODOs
 
-7. Step 7
+1. **Fix Typescript Errors**
 
-Create your first wasm function call
+   Run typescript and observe lots of errors
 
-```
-cargo install wasm-pack
-cd ./mathrs/math-wasm
-wasm-pack build --target nodejs
-```
+   ```
+   tsc --watch
+   ```
 
-Edit `./mathrs/math-wasm/lib.rs` and add a new function:
+2. **Remove temporary type**
 
-```
-#[wasm_bindgen]
-pub fn minus(left: i64, right: i64) -> i64 {
-    left - right
-}
-```
+   find all "TODOTYPE" in the codebase and remove
 
-Then recompile
+3. **Create your first wasm function call**
 
-```
-// cd ./mathrs/math-wasm
+   i. Install and try building node!
 
-wasm-pack build --target nodejs
-```
+   ```
+   cargo install wasm-pack
+   cd ./mathrs/math-wasm
+   wasm-pack build --target nodejs
+   ```
 
-Then within ./math-wasm.test.mts, add a function for `testMinus`
+   ii. Edit `./mathrs/math-wasm/lib.rs` and add a new function:
 
-```
-// cd .
+   ```
+   #[wasm_bindgen]
+   pub fn minus(left: i64, right: i64) -> i64 {
+       left - right
+   }
+   ```
 
-function testMinus() {
-  // Exercise left for the viewer
-}
-```
+   iii. Recompile the rust library
 
-Now run it:
+   ```
+   // cd ./mathrs/math-wasm
 
-```
-// cd .
+   wasm-pack build --target nodejs
+   ```
 
-tsc;node math-wasm.test.mjs
-```
+   iv. Add a new javascript test
+
+   Then within ./math-wasm.test.mts, add a function for `testMinus`
+
+   ```
+   // cd .
+
+   function testMinus() {
+     // Exercise left for the viewer
+   }
+   ```
+
+   v. Now run it:
+
+   ```
+   // cd .
+
+   tsc;node math-wasm.test.mjs
+   ```

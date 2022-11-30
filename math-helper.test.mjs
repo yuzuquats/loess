@@ -1,6 +1,6 @@
 import MathHelper from "./math-helper.mjs";
 import { assertEqFloat, assertEqFloatArr } from "./assert.mjs";
-import { MathJs } from "./math.mjs";
+import { MathJs } from "./mathjs.mjs";
 function testWeightFunction__(d, dmax, degree, expected) {
     const actual = MathHelper.weightFunc(d, dmax, degree);
     assertEqFloat(actual, expected);

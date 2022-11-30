@@ -1,5 +1,5 @@
-import { MathJs } from "./math.mjs";
-import type { matrix, arr1d, Arr1ToArr1 } from "./math.mjs";
+import { MathJs } from "./mathjs.mjs";
+import type { matrix, arr1d, Arr1ToArr1 } from "./mathjs.mjs";
 
 // MathHelper are custom math helper APIs we implement ourselves
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js

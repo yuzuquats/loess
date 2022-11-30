@@ -1,4 +1,4 @@
-import type { matrix, arr1d } from "./math.mjs";
+import type { matrix, arr1d } from "./mathjs.mjs";
 
 const hasWindow = typeof window != "undefined";
 
