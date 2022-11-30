@@ -1,14 +1,8 @@
-"use strict";
-// MathJs is the public api for the math.js library publically available
-// here: https://mathjs.org
-//
-const MathJs = 
-// @ts-ignore
-math;
+import { MathJs } from "./math.mjs";
 // MathHelper are custom math helper APIs we implement ourselves
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js
 //
-class MathHelper {
+export default class MathHelper {
     /**
      * https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
      * The weight for a specific point in any localized subset of data is

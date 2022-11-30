@@ -1,10 +1,15 @@
-window.assert = (test: boolean, message: string) => {
+import type { matrix, arr1d } from "./math.mjs";
+
+const hasWindow = typeof window != "undefined";
+
+const assert = (test: boolean, message: string) => {
   if (!test) {
     console.error(message);
   }
 };
+hasWindow && (window.assert = assert);
 
-window.assertEqual = (a: any, b: any, message?: string) => {
+const assertEqual = (a: any, b: any, message?: string) => {
   if (a != b) {
     if (message) {
       console.error(`'${a}' != '${b}'`);
@@ -13,8 +18,9 @@ window.assertEqual = (a: any, b: any, message?: string) => {
     }
   }
 };
+hasWindow && (window.assertEqual = assertEqual);
 
-window.assertEqFloat = (a: number, b: number, message?: string) => {
+const assertEqFloat = (a: number, b: number, message?: string) => {
   if (Math.abs(a - b) > Number.EPSILON) {
     if (message) {
       console.error(`'${a}' != '${b}'`);
@@ -23,7 +29,9 @@ window.assertEqFloat = (a: number, b: number, message?: string) => {
     }
   }
 };
-window.assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
+hasWindow && (window.assertEqFloat = assertEqFloat);
+
+const assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
   function zip(arrays: [arr1d, arr1d]) {
     return arrays[0].map(function (_, i) {
       return arrays.map(function (array) {
@@ -35,3 +43,6 @@ window.assertEqFloatArr = (a: arr1d, b: arr1d, message?: string) => {
   const zipped = zip([a, b]);
   zipped.forEach((e) => assertEqFloat(e[0], e[1], message));
 };
+hasWindow && (window.assertEqFloatArr = assertEqFloatArr);
+
+export { assert, assertEqual, assertEqFloat, assertEqFloatArr };

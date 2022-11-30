@@ -26,6 +26,12 @@ Add tests to loess-validator.ts
 5. Step 5
 
 Fix Typescript Errors
+You can rerun tests with
+
+```
+node mathjs.test.mjs
+node math-helper.test.mjs
+```
 
 6. Step 6
 
