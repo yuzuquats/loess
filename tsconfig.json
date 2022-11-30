@@ -24,7 +24,7 @@
     "checkJs": false,
   },
   "include": [
-    "./mathrs/math-wasm/pkg/*.ts",
+    "math-wasm/pkg/*.ts",
     "**/*.ts",
     "**/*.mts"
   ],

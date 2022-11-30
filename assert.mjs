@@ -1,4 +1,5 @@
 const hasWindow = typeof window != "undefined";
+const epsilon = 1 ** -7; // Number.EPSILON
 const assertError = (fn) => {
     try {
         fn();
@@ -29,7 +30,7 @@ const assertEqual = (a, b, message) => {
 };
 hasWindow && (window.assertEqual = assertEqual);
 const assertEqFloat = (a, b, message) => {
-    if (Math.abs(a - b) > Number.EPSILON) {
+    if (Math.abs(a - b) > epsilon) {
         if (!message) {
             console.error(a, "!=", b);
             throw new Error(`Error (assertion failed | ${a} != ${b})`);

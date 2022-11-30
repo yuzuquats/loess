@@ -1,6 +1,7 @@
 import type { matrix, arr1d } from "./mathjs.mjs";
 
 const hasWindow = typeof window != "undefined";
+const epsilon = 1 ** -7; // Number.EPSILON
 
 const assertError = (fn: () => void) => {
   try {
@@ -33,7 +34,7 @@ const assertEqual = (a: any, b: any, message?: string) => {
 hasWindow && (window.assertEqual = assertEqual);
 
 const assertEqFloat = (a: number, b: number, message?: string) => {
-  if (Math.abs(a - b) > Number.EPSILON) {
+  if (Math.abs(a - b) > epsilon) {
     if (!message) {
       console.error(a, "!=", b);
       throw new Error(`Error (assertion failed | ${a} != ${b})`);
