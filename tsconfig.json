@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "es6",
+    "target": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "nodenext",
     "lib": [
       "es2017",
@@ -24,7 +24,7 @@
     "checkJs": false,
   },
   "include": [
-    // "**/*.d.ts",
+    "./mathrs/math-wasm/pkg/*.ts",
     "**/*.ts",
     "**/*.mts"
   ],

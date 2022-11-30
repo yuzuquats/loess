@@ -267,7 +267,6 @@ Kurtosis:                       2.177   Cond. No.                         14.1
 */
 // https://www.statsmodels.org/stable/examples/notebooks/generated/wls.html
 function testWeightedLeastSquare() {
-    var _a, _b;
     console.log("ENTRY: testWeightedLeastSquare");
     //(1) case 1, 2, 3
     const caseOne = {
@@ -316,8 +315,8 @@ function testWeightedLeastSquare() {
     assertEqFloatArr(fit2["residual"]._data, caseTwo.expect["residual"]._data);
     // should return error object if x is non-invertible
     const fit3 = MathHelper.weightedLeastSquare(caseThree.x, caseThree.y, caseThree.w);
-    console.log((_a = fit3.error) === null || _a === void 0 ? void 0 : _a.message);
-    assertEqual((_b = fit3.error) === null || _b === void 0 ? void 0 : _b.message, "Cannot calculate inverse, determinant is zero");
+    console.log(fit3.error?.message);
+    assertEqual(fit3.error?.message, "Cannot calculate inverse, determinant is zero");
     // case 4
     // weights and response: same dimension
     const intercept = [

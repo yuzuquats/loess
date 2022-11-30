@@ -46,6 +46,9 @@ function ierfc(x) {
 }
 // Models the normal distribution
 class Gaussian {
+    mean;
+    variance;
+    standardDeviation;
     constructor(mean, variance) {
         if (variance <= 0) {
             throw new Error("Variance must be > 0 (but was " + variance + ")");

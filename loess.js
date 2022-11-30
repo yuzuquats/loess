@@ -1,5 +1,16 @@
 "use strict";
 class Loess {
+    options;
+    x;
+    normalization;
+    expandedX;
+    transposedX;
+    w;
+    bandwidth;
+    y;
+    n;
+    d;
+    degree;
     constructor(data, options = {
         span: 0.75,
         band: 0,
