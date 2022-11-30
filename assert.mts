@@ -5,16 +5,19 @@ const hasWindow = typeof window != "undefined";
 const assert = (test: boolean, message: string) => {
   if (!test) {
     console.error(message);
+    throw new Error(`Error (assertion failed): ${message}`);
   }
 };
 hasWindow && (window.assert = assert);
 
 const assertEqual = (a: any, b: any, message?: string) => {
   if (a != b) {
-    if (message) {
-      console.error(`'${a}' != '${b}'`);
+    if (!message) {
+      console.error(a, "!=", b);
+      throw new Error(`Error (assertion failed | ${a} != ${b})`);
     } else {
-      console.error(`'${a}' != '${b}'`, message);
+      console.error(a, "!=", b, ">>", message);
+      throw new Error(`Error (assertion failed | ${a} != ${b}): ${message}`);
     }
   }
 };
@@ -22,10 +25,12 @@ hasWindow && (window.assertEqual = assertEqual);
 
 const assertEqFloat = (a: number, b: number, message?: string) => {
   if (Math.abs(a - b) > Number.EPSILON) {
-    if (message) {
-      console.error(`'${a}' != '${b}'`);
+    if (!message) {
+      console.error(a, "!=", b);
+      throw new Error(`Error (assertion failed | ${a} != ${b})`);
     } else {
-      console.error(`'${a}' != '${b}'`, message);
+      console.error(a, "!=", b, ">>", message);
+      throw new Error(`Error (assertion failed | ${a} != ${b}): ${message}`);
     }
   }
 };

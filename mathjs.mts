@@ -12,7 +12,7 @@ console.log(math.std);
 // MathJs is the public api for the math.js library publically available
 // here: https://mathjs.org
 //
-export const MathJs: {
+export type MathJsLibrary = {
   std: <T>(
     array: Array<T>,
     normalization?: "unbiased" | "uncorrected" | "biased"
@@ -41,6 +41,8 @@ export const MathJs: {
   //ones: (m: number, n: number) => MathJsMatrix;
   sort: (x: arr1d) => arr1d;
   size: (x: matrix) => arr1d;
-} =
+};
+
+export const MathJs: MathJsLibrary =
   // @ts-ignore
   math;
