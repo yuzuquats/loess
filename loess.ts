@@ -45,26 +45,24 @@ class Loess {
     this.d = model.d;
     this.bandwidth = model.bandwidth;
 
-    this.degree = typeof this.options.degree === "string"
-      ? ["constant", "linear", "quadratic"].indexOf(this.options.degree) 
-      : this.options.degree;
+    this.degree =
+      typeof this.options.degree === "string"
+        ? ["constant", "linear", "quadratic"].indexOf(this.options.degree)
+        : this.options.degree;
 
     if (!this.options.normalize) {
       this.options.normalize = this.degree > 1 ? true : false;
     }
 
     // generate normalization function with fixed standard deviation
-    if (this.options.normalize) 
+    if (this.options.normalize)
       this.normalization = this.x.map(MathHelper.normalize);
 
-    this.expandedX = MathHelper.polynomialExpansion(
-      this.x,
-      this.degree
-    );
+    this.expandedX = MathHelper.polynomialExpansion(this.x, this.degree);
     const normalized = this.normalization
       ? this.x.map((x, idx) => this.normalization[idx](x))
       : this.x;
-  
+
     this.transposedX = MathHelper.transpose(normalized);
   }
 
@@ -72,33 +70,29 @@ class Loess {
     const fit = MathHelper.weightedLeastSquare(this.x, this.y, this.w);
     return fit;
   }
-  
+
   /**
    * https://towardsdatascience.com/iterated-reweighted-least-squares-and-glms-explained-9c0cc0063526
    * Iterated Reweighted Least Squares
-   * @param data 
-   * @returns 
+   * @param data
+   * @returns
    */
-  predict(data?: {x: Array<number>; x2?: Array<number>}): {
+  predict(data?: { x: Array<number>; x2?: Array<number> }): {
     fitted: Array<number>;
     betas: Array<number>;
     weights: Array<number>;
     residuals: Array<number>;
     halfwidth?: Array<number>;
-  } 
-  {
+  } {
     const { x_new, n } = validatePredict.bind(this)(data);
-    const newExpandedX = MathHelper.polynomialExpansion(
-      x_new,
-      this.degree
-    );
+    const newExpandedX = MathHelper.polynomialExpansion(x_new, this.degree);
 
     // compute normalized x_new using the same normaliztion function generated using x
     const newNormalized = this.normalization
       ? x_new.map((x, idx) => this.normalization[idx](x))
       : x_new;
-  
-    const newTransposedX = MathHelper.transpose(newNormalized);  
+
+    const newTransposedX = MathHelper.transpose(newNormalized);
 
     // compute the distance between x and x_new
     const distM = MathHelper.distMatrix(newTransposedX, this.transposedX);
@@ -114,10 +108,14 @@ class Loess {
     var weights: any[] = [];
     var betas: any[] = [];
 
-    function iterate(wt: matrix) {  
+    function iterate(wt: matrix) {
       weights = MathJs.dotMultiply(wt, weightM);
       MathHelper.transpose(newExpandedX).forEach((point, idx) => {
-        const fit = MathHelper.weightedLeastSquare(thisExpandedX, thisY, weights[idx]);
+        const fit = MathHelper.weightedLeastSquare(
+          thisExpandedX,
+          thisY,
+          weights[idx]
+        );
         if (fit.error) {
           // predict future y as the weighted average of historical y value, independent of X
           const sumWeights: number = MathJs.sum(weights[idx]);
@@ -128,35 +126,35 @@ class Loess {
               ? 0
               : MathJs.multiply(thisY, weights[idx]) / sumWeights;
 
-          // y = aX + b where a = 0, b = mle    
+          // y = aX + b where a = 0, b = mle
           //fit.beta = MathJs.zeros(thisExpandedX.length).set([0], mle);
           fit.beta = MathJs.zeros(thisExpandedX.length);
           fit.beta._data[0] = mle;
 
           //fit.residual = MathJs.subtract(thisY, mle);
-          fit.residual = thisY.map(e => e - mle);
+          fit.residual = thisY.map((e) => e - mle);
         }
         fitted.push(MathJs.squeeze(MathJs.multiply(point, fit.beta)));
         residuals.push(fit.residual);
         betas.push(fit.beta.toArray());
         const median = MathJs.median(MathJs.abs(fit.residual));
-        wt[idx] = fit.residual.map((r) => MathHelper.weightFunc(r, 6 * median, 2));
+        wt[idx] = fit.residual.map((r) =>
+          MathHelper.weightFunc(r, 6 * median, 2)
+        );
       });
     }
 
-    //const robustWeights = MathJs.ones(n, thisN); 
+    //const robustWeights = MathJs.ones(n, thisN);
     const robustWeights = Array(n).fill(MathJs.ones(thisN));
 
     var iterations: number;
-    if (this.options.iterations)
-      iterations = this.options.iterations
-    else  
-      iterations = this.options.robust == true ? 4 : 1 
+    if (this.options.iterations) iterations = this.options.iterations;
+    else iterations = this.options.robust == true ? 4 : 1;
 
     for (let iter = 0; iter < iterations; iter++)
       iterate.bind(this)(robustWeights);
-    
-    const output = { fitted, betas, residuals, weights};
+
+    const output = { fitted, betas, residuals, weights };
     if (this.options.band) {
       const z = gaussian(0, 1).ppf(1 - (1 - this.options.band) / 2);
       const halfwidth = weights.map((weight, idx) => {
@@ -168,19 +166,23 @@ class Loess {
         //);
 
         const intervalEstimate = Math.sqrt(
-          MathJs.multiply(residuals[idx].map(r => MathJs.square(r)), weight) / (V1 - V2 / V1)
-        );        
+          MathJs.multiply(
+            residuals[idx].map((r) => MathJs.square(r)),
+            weight
+          ) /
+            (V1 - V2 / V1)
+        );
         return intervalEstimate * z;
       });
       Object.assign(output, { halfwidth });
-    } 
+    }
     return output;
   }
 
   /**
-   * 
-   * @param cuts 
-   * @returns 
+   *
+   * @param cuts
+   * @returns
    */
   grid(cuts: Array<number>) {
     validateGrid.bind(this)(cuts);
@@ -204,7 +206,8 @@ class Loess {
       for (let i = 0; i < repeats; i++) {
         x_new[idx] = x_new[idx].concat(
           x_cuts[idx].reduce(
-            (acc: Array<number>, cut: number) => acc.concat(Array(copies).fill(cut)),
+            (acc: Array<number>, cut: number) =>
+              acc.concat(Array(copies).fill(cut)),
             []
           )
         );

@@ -65,7 +65,6 @@ function main() {
   //runMathHelperTests();
   //runLinearLoessTest();
   runQuadraticLoessTest();
-
 }
 
 main();

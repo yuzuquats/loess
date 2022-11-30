@@ -14,9 +14,10 @@ class Loess {
         this.n = model.n;
         this.d = model.d;
         this.bandwidth = model.bandwidth;
-        this.degree = typeof this.options.degree === "string"
-            ? ["constant", "linear", "quadratic"].indexOf(this.options.degree)
-            : this.options.degree;
+        this.degree =
+            typeof this.options.degree === "string"
+                ? ["constant", "linear", "quadratic"].indexOf(this.options.degree)
+                : this.options.degree;
         if (!this.options.normalize) {
             this.options.normalize = this.degree > 1 ? true : false;
         }
@@ -31,7 +32,7 @@ class Loess {
     }
     train() {
         const fit = MathHelper.weightedLeastSquare(this.x, this.y, this.w);
-        console.log(fit);
+        return fit;
     }
     /**
      * https://towardsdatascience.com/iterated-reweighted-least-squares-and-glms-explained-9c0cc0063526
@@ -69,12 +70,12 @@ class Loess {
                     const mle = sumWeights === 0
                         ? 0
                         : MathJs.multiply(thisY, weights[idx]) / sumWeights;
-                    // y = aX + b where a = 0, b = mle    
+                    // y = aX + b where a = 0, b = mle
                     //fit.beta = MathJs.zeros(thisExpandedX.length).set([0], mle);
                     fit.beta = MathJs.zeros(thisExpandedX.length);
                     fit.beta._data[0] = mle;
                     //fit.residual = MathJs.subtract(thisY, mle);
-                    fit.residual = thisY.map(e => e - mle);
+                    fit.residual = thisY.map((e) => e - mle);
                 }
                 fitted.push(MathJs.squeeze(MathJs.multiply(point, fit.beta)));
                 residuals.push(fit.residual);
@@ -83,7 +84,7 @@ class Loess {
                 wt[idx] = fit.residual.map((r) => MathHelper.weightFunc(r, 6 * median, 2));
             });
         }
-        //const robustWeights = MathJs.ones(n, thisN); 
+        //const robustWeights = MathJs.ones(n, thisN);
         const robustWeights = Array(n).fill(MathJs.ones(thisN));
         var iterations;
         if (this.options.iterations)
@@ -92,7 +93,7 @@ class Loess {
             iterations = this.options.robust == true ? 4 : 1;
         for (let iter = 0; iter < iterations; iter++)
             iterate.bind(this)(robustWeights);
-        const output = { fitted, betas, weights };
+        const output = { fitted, betas, residuals, weights };
         if (this.options.band) {
             const z = gaussian(0, 1).ppf(1 - (1 - this.options.band) / 2);
             const halfwidth = weights.map((weight, idx) => {
@@ -101,7 +102,8 @@ class Loess {
                 //const intervalEstimate = Math.sqrt(
                 //  MathJs.multiply(MathJs.square(residuals[idx]), weight) / (V1 - V2 / V1)
                 //);
-                const intervalEstimate = Math.sqrt(MathJs.multiply(residuals[idx].map(r => MathJs.square(r)), weight) / (V1 - V2 / V1));
+                const intervalEstimate = Math.sqrt(MathJs.multiply(residuals[idx].map((r) => MathJs.square(r)), weight) /
+                    (V1 - V2 / V1));
                 return intervalEstimate * z;
             });
             Object.assign(output, { halfwidth });

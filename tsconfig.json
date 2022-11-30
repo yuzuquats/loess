@@ -3,7 +3,7 @@
     "target": "es2017",
     "module": "ESNext",
     "declaration": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": false,
     "noLib": false,
     "moduleResolution": "nodenext",
