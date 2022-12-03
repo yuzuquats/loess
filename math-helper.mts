@@ -1,16 +1,16 @@
 import { MathJs } from "./mathjs.mjs";
-import type { matrix, arr1d, Arr1ToArr1 } from "./mathjs.mjs";
+import type { Matrix, arr1d, Arr1ToArr1 } from "./mathjs.mjs";
 
 export type MathHelperLib = {
   weightFunc(d: number, dmax: number, degree: number): number;
   normalize(referenceArr: arr1d): Arr1ToArr1;
   transpose(X: Array<Array<number>>): Array<Array<number>>;
   euclideanDist(orig: arr1d, dest: arr1d): number;
-  distMatrix(origSet: matrix, destSet: matrix): matrix;
-  weightMatrix(distMat: matrix, inputWeights: arr1d, bandwidth: number): matrix;
+  distMatrix(origSet: Matrix, destSet: Matrix): Matrix;
+  weightMatrix(distMat: Matrix, inputWeights: arr1d, bandwidth: number): Matrix;
   polynomialExpansion<T>(factors: Array<T>, degree: number): Array<T>;
   weightedLeastSquare(
-    predictors: matrix,
+    predictors: Matrix,
     response: arr1d,
     weights: arr1d
   ): TODOTYPE;
@@ -95,7 +95,7 @@ export const MathHelper: MathHelperLib = {
    * @param destSet
    * @returns
    */
-  distMatrix(origSet: matrix, destSet: matrix): matrix {
+  distMatrix(origSet: Matrix, destSet: Matrix): Matrix {
     return origSet.map((orig) =>
       destSet.map((dest) => MathHelper.euclideanDist(orig, dest))
     );
@@ -109,10 +109,10 @@ export const MathHelper: MathHelperLib = {
    * @returns
    */
   weightMatrix(
-    distMat: matrix,
+    distMat: Matrix,
     inputWeights: arr1d,
     bandwidth: number
-  ): matrix {
+  ): Matrix {
     function zip(arrays: [arr1d, arr1d]) {
       return arrays[0].map(function (_, i) {
         return arrays.map(function (array) {
@@ -179,7 +179,7 @@ export const MathHelper: MathHelperLib = {
    * @returns
    */
   weightedLeastSquare(
-    predictors: matrix,
+    predictors: Matrix,
     response: arr1d,
     weights: arr1d
   ): TODOTYPE {

@@ -1,4 +1,4 @@
-import type { arr1d } from "./mathjs.mjs";
+import type { arr1d, Matrix } from "./mathjs.mjs";
 
 const hasWindow = typeof window != "undefined";
 
@@ -73,6 +73,23 @@ const assertEqFloat = (
 };
 hasWindow && (window.assertEqFloat = assertEqFloat);
 
+const assertEqFloatMatrix = (
+  a: Matrix,
+  b: Matrix,
+  precision: number = Number.EPSILON,
+  message?: string
+) => {
+  assertEqual(
+    a.length,
+    b.length,
+    "asserting an array - arrays should have the same length"
+  );
+  for (const [index, aRow] of a.entries()) {
+    assertEqFloatArr(aRow, b[index], precision, message);
+  }
+};
+hasWindow && (window.assertEqFloatMatrix = assertEqFloatMatrix);
+
 const assertEqFloatArr = (
   a: arr1d,
   b: arr1d,
@@ -97,4 +114,11 @@ const assertEqFloatArr = (
 };
 hasWindow && (window.assertEqFloatArr = assertEqFloatArr);
 
-export { assert, assertEqual, assertEqFloat, assertEqFloatArr, assertError };
+export {
+  assert,
+  assertEqual,
+  assertEqFloat,
+  assertEqFloatArr,
+  assertError,
+  assertEqFloatMatrix,
+};

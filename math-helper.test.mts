@@ -1,8 +1,13 @@
-import { assertEqFloat, Precision, assertEqFloatArr } from "./assert.mjs";
+import {
+  assertEqFloat,
+  Precision,
+  assertEqFloatArr,
+  assertEqFloatMatrix,
+} from "./assert.mjs";
 import mathRs from "./math-wasm/pkg/math_wasm.js";
 import { MathHelper, type MathHelperLib } from "./math-helper.mjs";
 import { MathJs } from "./mathjs.mjs";
-import type { matrix, arr1d } from "./mathjs.mjs";
+import type { Matrix, arr1d } from "./mathjs.mjs";
 
 function test(m: MathHelperLib) {
   const tests = {
@@ -28,7 +33,6 @@ function test(m: MathHelperLib) {
         cutoff: number
       ) => {
         const output = m.normalize(refArray)(refArray);
-        // console.log(output);
         assertEqFloatArr(output, expected, Precision(-10));
         assertEqFloat(
           MathJs.std(expected.slice(cutoff, expected.length - cutoff)),
@@ -74,35 +78,30 @@ function test(m: MathHelperLib) {
       );
     },
     transpose: () => {
-      const y: matrix = MathHelper.transpose([
-        [1, 2, 3],
-        [4, 5, 6],
-      ]);
-      assertEqFloatArr(y[0], [1, 4]);
-      assertEqFloatArr(y[1], [2, 5]);
-      assertEqFloatArr(y[2], [3, 6]);
-
-      const caseOne = {
-        test: [
+      assertEqFloatMatrix(
+        m.transpose([
+          [1, 2, 3],
+          [4, 5, 6],
+        ]),
+        [
+          [1, 4],
+          [2, 5],
+          [3, 6],
+        ]
+      );
+      assertEqFloatMatrix(
+        m.transpose([
           [1, 2, 3, 4, 5],
           [6, 7, 8, 9, 10],
-        ],
-        expect: [
+        ]),
+        [
           [1, 6],
           [2, 7],
           [3, 8],
           [4, 9],
           [5, 10],
-        ],
-      };
-
-      // should return transposed matrix'
-      const actual = m.transpose(caseOne.test);
-      assertEqFloatArr(actual[0], caseOne.expect[0]);
-      assertEqFloatArr(actual[1], caseOne.expect[1]);
-      assertEqFloatArr(actual[2], caseOne.expect[2]);
-      assertEqFloatArr(actual[3], caseOne.expect[3]);
-      assertEqFloatArr(actual[4], caseOne.expect[4]);
+        ]
+      );
     },
     euclideanDist: () => {
       assertEqFloat(m.euclideanDist([1, 2], [4, 6]), 5);
@@ -111,7 +110,44 @@ function test(m: MathHelperLib) {
         5.196
       );
     },
-    distMatrix: () => {},
+    distMatrix: () => {
+      assertEqFloatMatrix(MathHelper.distMatrix([[1, 1]], [[4, 5]]), [[5]]);
+      assertEqFloatMatrix(
+        MathHelper.distMatrix(
+          [
+            [1, 1],
+            [2, 2],
+          ],
+          [
+            [4, 5],
+            [5, 6],
+          ]
+        ),
+        [
+          [5, 6.4031242374328485],
+          [3.605551275463989, 5],
+        ]
+      );
+      assertEqFloatMatrix(
+        MathHelper.distMatrix(
+          [
+            [1, 1],
+            [4, 1],
+            [4, 5],
+          ],
+          [
+            [1, 1],
+            [4, 1],
+            [4, 5],
+          ]
+        ),
+        [
+          [0, 3, 5],
+          [3, 0, 4],
+          [5, 4, 0],
+        ]
+      );
+    },
     weightMatrix: () => {},
     polynomialExpansion: () => {},
     weightedLeastSquare: () => {},
@@ -125,6 +161,8 @@ function test(m: MathHelperLib) {
   tests.transpose();
   console.log("  TEST: euclideanDist");
   tests.euclideanDist();
+  console.log("  TEST: distanceMatrix");
+  tests.distMatrix();
 }
 
 console.log("Testing Original Library (MathHelper)");

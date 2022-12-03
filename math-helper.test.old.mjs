@@ -1,44 +1,6 @@
 import { MathHelper } from "./math-helper.mjs";
 import { assertEqFloatArr } from "./assert.mjs";
 import { MathJs } from "./mathjs.mjs";
-function testDistMatrix() {
-    console.log("ENTRY: testDistMatrix");
-    const origSet = [[1, 1]];
-    const destSet = [[4, 5]];
-    const val = MathHelper.distMatrix(origSet, destSet);
-    assertEqFloatArr(val[0], [5]);
-    const origSet1 = [
-        [1, 1],
-        [2, 2],
-    ];
-    const destSet1 = [
-        [4, 5],
-        [5, 6],
-    ];
-    const val1 = MathHelper.distMatrix(origSet1, destSet1);
-    // distance between [1,1] and [4,5], distance between[1,1] and [5,6]
-    assertEqFloatArr(val1[0], [5, 6.4031242374328485]);
-    // distance between[2,2] and [4,5],  distance between[2,2] and [5,6]
-    assertEqFloatArr(val1[1], [3.605551275463989, 5]);
-    const caseOne = {
-        coordinates: [
-            [1, 1],
-            [4, 1],
-            [4, 5],
-        ],
-        expect: [
-            [0, 3, 5],
-            [3, 0, 4],
-            [5, 4, 0],
-        ],
-    };
-    // should return matrix of Euclidean distance between pairs of points
-    const actual = MathHelper.distMatrix(caseOne.coordinates, caseOne.coordinates);
-    assertEqFloatArr(actual[0], caseOne.expect[0]);
-    assertEqFloatArr(actual[1], caseOne.expect[1]);
-    assertEqFloatArr(actual[2], caseOne.expect[2]);
-    console.log("EXIT: testDistMatrix");
-}
 function testWeightMatrix() {
     console.log("ENTRY: testWeightMatrix");
     const distMat1 = [

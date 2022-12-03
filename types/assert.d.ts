@@ -16,6 +16,12 @@ declare global {
       precision: number,
       message?: string
     ) => void;
+    assertEqFloatMatrix: (
+      a: Matrix,
+      b: Matrix,
+      precision: number,
+      message?: string
+    ) => void;
   }
 
   var assert: (test: boolean, message: string) => void;
@@ -29,6 +35,12 @@ declare global {
   var assertEqFloatArr: (
     a: arr1d,
     b: arr1d,
+    precision: number,
+    message?: string
+  ) => void;
+  var assertEqFloatMatrix: (
+    a: Matrix,
+    b: Matrix,
     precision: number,
     message?: string
   ) => void;

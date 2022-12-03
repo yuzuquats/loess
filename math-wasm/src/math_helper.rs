@@ -1,6 +1,8 @@
 use js_sys::Array;
 use wasm_bindgen::prelude::*;
 
+type Matrix = Array;
+
 /*
 Math Helper
 */
@@ -23,7 +25,7 @@ pub fn normalize(mut arr: Vec<f64>) -> JsValue {
 }
 
 #[wasm_bindgen]
-pub fn transpose(matrix: Array) -> Array {
+pub fn transpose(matrix: Matrix) -> Matrix {
     let transposed = Array::new();
     let c: Array = matrix.get(0).into();
     let c_len = c.length();
@@ -42,11 +44,32 @@ pub fn euclidean_distance(orig: Vec<f64>, dest: Vec<f64>) -> f64 {
     if orig.len() < 2 {
         return (orig.get(0).expect("") - dest.get(0).expect("")).abs();
     }
-
     orig.iter()
         .enumerate()
         .fold(0.0, |a, (i, val)| {
             a + (val - dest.get(i).expect("")).powf(2.0)
         })
         .sqrt()
+}
+
+pub fn into_f64_vec(a: &Array) -> Vec<f64> {
+    let mut v = Vec::with_capacity(a.length() as usize);
+    for i in 0..a.length() {
+        v[i as usize] = a.get(i).as_f64().expect("");
+    }
+    v
+}
+
+#[wasm_bindgen(js_name = distMatrix)]
+pub fn distance_matrix(origSet: Matrix, destSet: Matrix) -> Matrix {
+    origSet.map(&mut |a: JsValue, _, _| {
+        let a_arr: Array = a.into();
+        destSet
+            .map(&mut |b: JsValue, _, _| {
+                let b_arr: Array = b.into();
+                euclidean_distance(into_f64_vec(&a_arr), into_f64_vec(&b_arr)).into()
+                // 5.0.into()
+            })
+            .into()
+    })
 }

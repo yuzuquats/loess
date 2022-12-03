@@ -2,7 +2,7 @@
 import math from "./third-party/mathjs.js";
 
 export type MathJsMatrix = any; // const o: Object = { arr: number[][] }
-export type matrix = Array<Array<number>>;
+export type Matrix = number[][];
 export type arr1d = Array<number>;
 export type Arr1ToArr1 = (i: arr1d) => arr1d;
 
