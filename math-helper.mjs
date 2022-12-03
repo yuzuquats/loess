@@ -2,7 +2,7 @@ import { MathJs } from "./mathjs.mjs";
 // MathHelper are custom math helper APIs we implement ourselves
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js
 //
-export default class MathHelper {
+export const MathHelper = {
     /**
      * https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
      * The weight for a specific point in any localized subset of data is
@@ -16,15 +16,15 @@ export default class MathHelper {
      * @param degree
      * @returns
      */
-    static weightFunc(d, dmax, degree) {
+    weightFunc(d, dmax, degree) {
         return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
-    }
+    },
     /**
      * Normalize an array such that its standard deviation is 1
      * @param referenceArr
      * @returns
      */
-    static normalize(referenceArr) {
+    normalize(referenceArr) {
         const cutoff = Math.ceil(0.1 * referenceArr.length);
         let sorted_arr1 = [...referenceArr].sort((a, b) => a - b);
         // this is to remove the outliers
@@ -33,19 +33,19 @@ export default class MathHelper {
         return function (outputArr) {
             return outputArr.map((val) => val / sd);
         };
-    }
+    },
     /**
      * TODO
      * @param X
      * @returns
      */
-    static transpose(X) {
+    transpose(X) {
         const transposed = [];
         for (let i = 0; i < X[0].length; i++) {
             transposed.push(X.map((x) => x[i]));
         }
         return transposed;
-    }
+    },
     /**
      * Find the Euclidean distance between orig and dest
      * d(p,q) = sqrt((p1-q1)^2 + (p2-q2)^2 + (p3-q3)^2 + .....)
@@ -53,14 +53,14 @@ export default class MathHelper {
      * @param dest
      * @returns
      */
-    static euclideanDist(orig, dest) {
+    euclideanDist(orig, dest) {
         if (orig.length < 2) {
             return Math.abs(orig[0] - dest[0]);
         }
         else {
             return Math.sqrt(orig.reduce((acc, val, idx) => acc + Math.pow(val - dest[idx], 2), 0));
         }
-    }
+    },
     /**
      * find the distance between two matrices
      * origSet = [arr1, arr2, arr3]
@@ -72,9 +72,9 @@ export default class MathHelper {
      * @param destSet
      * @returns
      */
-    static distMatrix(origSet, destSet) {
+    distMatrix(origSet, destSet) {
         return origSet.map((orig) => destSet.map((dest) => MathHelper.euclideanDist(orig, dest)));
-    }
+    },
     /**
      * TODO
      * @param distMat
@@ -82,7 +82,7 @@ export default class MathHelper {
      * @param bandwidth
      * @returns
      */
-    static weightMatrix(distMat, inputWeights, bandwidth) {
+    weightMatrix(distMat, inputWeights, bandwidth) {
         function zip(arrays) {
             return arrays[0].map(function (_, i) {
                 return arrays.map(function (array) {
@@ -106,14 +106,14 @@ export default class MathHelper {
                 : sorted[cutoffIndex][0];
             return MathJs.dotMultiply(distVect.map((d) => MathHelper.weightFunc(d, dmax, 3)), inputWeights);
         });
-    }
+    },
     /**
      * TODO
      * @param factors
      * @param degree
      * @returns
      */
-    static polynomialExpansion(factors, degree) {
+    polynomialExpansion(factors, degree) {
         const expandedSet = [];
         let constTerm = 1;
         if (Array.isArray(factors[0]))
@@ -131,7 +131,7 @@ export default class MathHelper {
         for (let d = 0; d <= degree; d++)
             crossMultiply(constTerm, 0, d + 1);
         return expandedSet;
-    }
+    },
     /**
      * https://en.wikipedia.org/wiki/Weighted_least_squares
      *
@@ -140,7 +140,7 @@ export default class MathHelper {
      * @param weights: W
      * @returns
      */
-    static weightedLeastSquare(predictors, response, weights) {
+    weightedLeastSquare(predictors, response, weights) {
         try {
             const weightedY = MathJs.matrix(MathJs.dotMultiply(weights, response));
             const weightedX = MathHelper.transpose(
@@ -164,5 +164,5 @@ export default class MathHelper {
             console.error(err);
             return { error: err };
         }
-    }
-}
+    },
+};

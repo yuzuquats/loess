@@ -1,10 +1,25 @@
 import { MathJs } from "./mathjs.mjs";
 import type { matrix, arr1d, Arr1ToArr1 } from "./mathjs.mjs";
 
+export type MathHelperLib = {
+  weightFunc(d: number, dmax: number, degree: number): number;
+  normalize(referenceArr: arr1d): Arr1ToArr1;
+  transpose(X: Array<Array<number>>): Array<Array<number>>;
+  euclideanDist(orig: arr1d, dest: arr1d): number;
+  distMatrix(origSet: matrix, destSet: matrix): matrix;
+  weightMatrix(distMat: matrix, inputWeights: arr1d, bandwidth: number): matrix;
+  polynomialExpansion<T>(factors: Array<T>, degree: number): Array<T>;
+  weightedLeastSquare(
+    predictors: matrix,
+    response: arr1d,
+    weights: arr1d
+  ): TODOTYPE;
+};
+
 // MathHelper are custom math helper APIs we implement ourselves
 // https://github.com/yongjun21/loess/blob/master/src/helpers.js
 //
-export default class MathHelper {
+export const MathHelper: MathHelperLib = {
   /**
    * https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm#:~:text=As%20mentioned%20above%2C%20the%20weight,points%20that%20are%20furthest%20away.
    * The weight for a specific point in any localized subset of data is
@@ -18,16 +33,16 @@ export default class MathHelper {
    * @param degree
    * @returns
    */
-  static weightFunc(d: number, dmax: number, degree: number): number {
+  weightFunc(d: number, dmax: number, degree: number): number {
     return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0;
-  }
+  },
 
   /**
    * Normalize an array such that its standard deviation is 1
    * @param referenceArr
    * @returns
    */
-  static normalize(referenceArr: arr1d): Arr1ToArr1 {
+  normalize(referenceArr: arr1d): Arr1ToArr1 {
     const cutoff = Math.ceil(0.1 * referenceArr.length);
     let sorted_arr1 = [...referenceArr].sort((a, b) => a - b);
 
@@ -37,20 +52,20 @@ export default class MathHelper {
     return function (outputArr) {
       return outputArr.map((val) => val / sd);
     };
-  }
+  },
 
   /**
    * TODO
    * @param X
    * @returns
    */
-  static transpose(X: Array<Array<number>>): Array<Array<number>> {
+  transpose(X: Array<Array<number>>): Array<Array<number>> {
     const transposed: Array<Array<number>> = [];
     for (let i = 0; i < X[0].length; i++) {
       transposed.push(X.map((x) => x[i]));
     }
     return transposed;
-  }
+  },
 
   /**
    * Find the Euclidean distance between orig and dest
@@ -59,7 +74,7 @@ export default class MathHelper {
    * @param dest
    * @returns
    */
-  static euclideanDist(orig: arr1d, dest: arr1d): number {
+  euclideanDist(orig: arr1d, dest: arr1d): number {
     if (orig.length < 2) {
       return Math.abs(orig[0] - dest[0]);
     } else {
@@ -67,7 +82,7 @@ export default class MathHelper {
         orig.reduce((acc, val, idx) => acc + Math.pow(val - dest[idx], 2), 0)
       );
     }
-  }
+  },
 
   /**
    * find the distance between two matrices
@@ -80,11 +95,11 @@ export default class MathHelper {
    * @param destSet
    * @returns
    */
-  static distMatrix(origSet: matrix, destSet: matrix): matrix {
+  distMatrix(origSet: matrix, destSet: matrix): matrix {
     return origSet.map((orig) =>
       destSet.map((dest) => MathHelper.euclideanDist(orig, dest))
     );
-  }
+  },
 
   /**
    * TODO
@@ -93,7 +108,7 @@ export default class MathHelper {
    * @param bandwidth
    * @returns
    */
-  static weightMatrix(
+  weightMatrix(
     distMat: matrix,
     inputWeights: arr1d,
     bandwidth: number
@@ -130,7 +145,7 @@ export default class MathHelper {
         inputWeights
       );
     });
-  }
+  },
 
   /**
    * TODO
@@ -138,7 +153,7 @@ export default class MathHelper {
    * @param degree
    * @returns
    */
-  static polynomialExpansion<T>(factors: Array<T>, degree: number): Array<T> {
+  polynomialExpansion<T>(factors: Array<T>, degree: number): Array<T> {
     const expandedSet: Array<T> = [];
     let constTerm: number | arr1d = 1;
     if (Array.isArray(factors[0])) constTerm = Array(factors[0].length).fill(1);
@@ -153,7 +168,7 @@ export default class MathHelper {
     }
     for (let d = 0; d <= degree; d++) crossMultiply(constTerm, 0, d + 1);
     return expandedSet;
-  }
+  },
 
   /**
    * https://en.wikipedia.org/wiki/Weighted_least_squares
@@ -163,7 +178,7 @@ export default class MathHelper {
    * @param weights: W
    * @returns
    */
-  static weightedLeastSquare(
+  weightedLeastSquare(
     predictors: matrix,
     response: arr1d,
     weights: arr1d
@@ -195,5 +210,5 @@ export default class MathHelper {
       console.error(err);
       return { error: err };
     }
-  }
-}
+  },
+};
