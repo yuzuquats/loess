@@ -1,5 +1,6 @@
-#[macro_use]
 use wasm_bindgen::prelude::*;
+
+mod math_helper;
 
 #[wasm_bindgen]
 extern "C" {

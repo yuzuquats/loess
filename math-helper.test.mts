@@ -6,9 +6,9 @@ import { MathHelper, type MathHelperLib } from "./math-helper.mjs";
 function test(m: MathHelperLib) {
   const tests = {
     weightFunction: () => {
-      assertEqFloat(m.weightFunc(2, 5, 3), 0.8200258559999998);
-      assertEqFloat(m.weightFunc(3, 5, 3), 0.48189030400000005);
-      assertEqFloat(m.weightFunc(4, 5, 3), 0.11621427199999991);
+      assertEqFloat(m.weightFunc(2, 5, 3), 0.8200258559999998, Precision(-7));
+      assertEqFloat(m.weightFunc(3, 5, 3), 0.48189030400000005, Precision(-7));
+      assertEqFloat(m.weightFunc(4, 5, 3), 0.11621427199999991, Precision(-7));
       assertEqFloat(m.weightFunc(5, 5, 3), 0);
       assertEqFloat(m.weightFunc(7, 5, 3), 0);
 
