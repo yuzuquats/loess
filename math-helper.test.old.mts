@@ -1,36 +1,7 @@
-import MathHelper from "./math-helper.mjs";
+import { MathHelper } from "./math-helper.mjs";
 import { assertEqFloat, assertEqFloatArr } from "./assert.mjs";
 import { MathJs } from "./mathjs.mjs";
 import type { matrix, arr1d } from "./mathjs.mjs";
-
-function testWeightFunction__(
-  d: number,
-  dmax: number,
-  degree: number,
-  expected: number
-) {
-  const actual = MathHelper.weightFunc(d, dmax, degree);
-  assertEqFloat(actual, expected);
-}
-
-function testWeightFunction() {
-  console.log("ENTRY: testWeightFunc");
-  testWeightFunction__(2, 5, 3, 0.8200258559999998);
-  testWeightFunction__(3, 5, 3, 0.48189030400000005);
-  testWeightFunction__(4, 5, 3, 0.11621427199999991);
-  testWeightFunction__(5, 5, 3, 0);
-  testWeightFunction__(7, 5, 3, 0);
-
-  //should return (1-(d/dmax)^n)^n if d < dmax
-  const v1 = MathHelper.weightFunc(0.5, 1, 3);
-  assertEqFloat(MathHelper.weightFunc(0.5, 1, 3), 0.669921875);
-  assertEqFloat(MathHelper.weightFunc(0.5, 1, 2), 0.5625);
-
-  //should return 0 if d >= dmax
-  assertEqFloat(MathHelper.weightFunc(1, 1, 3), 0);
-  assertEqFloat(MathHelper.weightFunc(1, 1, 2), 0);
-  console.log("EXIT: testWeightFunc");
-}
 
 function testNormalization() {
   console.log("ENTRY: testNormalize");

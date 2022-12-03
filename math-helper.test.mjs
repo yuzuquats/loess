@@ -9,6 +9,12 @@ function test(m) {
             assertEqFloat(m.weightFunc(4, 5, 3), 0.11621427199999991);
             assertEqFloat(m.weightFunc(5, 5, 3), 0);
             assertEqFloat(m.weightFunc(7, 5, 3), 0);
+            //should return (1-(d/dmax)^n)^n if d < dmax
+            assertEqFloat(m.weightFunc(0.5, 1, 3), 0.669921875);
+            assertEqFloat(m.weightFunc(0.5, 1, 2), 0.5625);
+            //should return 0 if d >= dmax
+            assertEqFloat(MathHelper.weightFunc(1, 1, 3), 0);
+            assertEqFloat(MathHelper.weightFunc(1, 1, 2), 0);
         },
     };
     console.log("  TEST: weightFunction");
