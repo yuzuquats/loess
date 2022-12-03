@@ -12,3 +12,20 @@ pub fn weight_function(d: f32, dmax: f32, degree: f32) -> f32 {
         0.0
     }
 }
+
+// type Function<T, R> = FnMut(T) -> R;
+
+// #[wasm_bindgen]
+// pub struct rt(Closure<dyn FnMut() -> f32>);
+// // pub struct Interval {
+// //     closure: Closure<dyn FnMut()>,
+// //     token: f64,
+// // }
+
+#[wasm_bindgen]
+pub fn normalize(mut arr: Vec<f64>) -> JsValue {
+    let cutoff = (0.1 * arr.len() as f64).ceil() as usize;
+    arr.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let std = crate::std(&arr[cutoff..arr.len() - cutoff]);
+    Closure::once_into_js(move |a: Vec<f64>| a.iter().map(|v| v / std).collect::<Vec<f64>>())
+}

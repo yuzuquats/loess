@@ -1,3 +1,5 @@
+#![feature(trait_alias)]
+
 use wasm_bindgen::prelude::*;
 
 mod math_helper;
@@ -32,14 +34,14 @@ pub fn add(left: usize, right: usize) -> usize {
 }
 
 #[wasm_bindgen]
-pub fn std(values: Vec<f32>) -> f32 {
-    let len = values.len() as f32;
+pub fn std(values: &[f64]) -> f64 {
+    let len = values.len() as f64;
     let mean = values.iter().fold(0.0, |accum, v| accum + v) / len;
     let variance = values
         .iter()
         .fold(0.0, |accum, v| accum + (v - mean).powf(2.0))
         / (len - 1.0);
-    f32::sqrt(variance)
+    f64::sqrt(variance)
 }
 
 #[wasm_bindgen]

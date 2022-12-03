@@ -79,6 +79,11 @@ const assertEqFloatArr = (
   precision: number,
   message?: string
 ) => {
+  assertEqual(
+    a.length,
+    b.length,
+    "asserting an array - arrays should have the same length"
+  );
   function zip(arrays: [arr1d, arr1d]) {
     return arrays[0].map(function (_, i) {
       return arrays.map(function (array) {
