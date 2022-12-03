@@ -73,3 +73,39 @@ pub fn distance_matrix(origSet: Matrix, destSet: Matrix) -> Matrix {
             .into()
     })
 }
+
+#[wasm_bindgen(js_name = weightMatrix)]
+pub fn weight_matrix() {
+    // function zip(arrays: [arr1d, arr1d]) {
+    //   return arrays[0].map(function (_, i) {
+    //     return arrays.map(function (array) {
+    //       return array[i];
+    //     });
+    //   });
+    // }
+
+    // return distMat.map((distVect) => {
+    //   let distVect_copy = [...distVect];
+    //   let inputWeights_copy = [...inputWeights];
+
+    //   //const sorted = zip([distVect, inputWeights]).sort(v => v[0]);
+    //   const sorted = zip([distVect_copy, inputWeights_copy]).sort(
+    //     ([a1, a2], [b1, b2]) => a1 - b1
+    //   );
+    //   const cutoff: number = MathJs.sum(inputWeights) * bandwidth;
+
+    //   let sumOfWeights = 0;
+    //   let cutoffIndex = sorted.findIndex((v) => {
+    //     sumOfWeights += v[1];
+    //     return sumOfWeights >= cutoff;
+    //   });
+    //   let dmax =
+    //     bandwidth > 1
+    //       ? sorted[sorted.length - 1][0] * bandwidth
+    //       : sorted[cutoffIndex][0];
+    //   return MathJs.dotMultiply(
+    //     distVect.map((d) => MathHelper.weightFunc(d, dmax, 3)),
+    //     inputWeights
+    //   );
+    // });
+}

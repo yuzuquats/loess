@@ -80,5 +80,4 @@ function testPolynomialExpansion() {
 // Reference: https://github.com/yongjun21/loess
 // https://mathjs.org/docs/reference/functions/mean.html
 
-testWeightMatrix();
 testPolynomialExpansion();
