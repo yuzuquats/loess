@@ -84,6 +84,9 @@ const assertEqFloatMatrix = (
     b.length,
     "asserting an array - arrays should have the same length"
   );
+  if (a.length != b.length) {
+    console.error(a, b);
+  }
   for (const [index, aRow] of a.entries()) {
     assertEqFloatArr(aRow, b[index], precision, message);
   }
@@ -101,6 +104,9 @@ const assertEqFloatArr = (
     b.length,
     "asserting an array - arrays should have the same length"
   );
+  if (a.length != b.length) {
+    console.error(a, b);
+  }
   function zip(arrays: [arr1d, arr1d]) {
     return arrays[0].map(function (_, i) {
       return arrays.map(function (array) {

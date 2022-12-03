@@ -148,7 +148,24 @@ function test(m: MathHelperLib) {
         ]
       );
     },
-    weightMatrix: () => {},
+    weightMatrix: () => {
+      // span <= 1
+      assertEqFloatMatrix(
+        MathHelper.weightMatrix([[5, 4, 3, 2, 1]], [1, 1, 1, 1, 1], 0.6),
+        [[0, 0, 0, 0.34847330183407, 0.8929533099629123]]
+      );
+
+      // span > 1
+      assertEqFloatMatrix(
+        MathHelper.weightMatrix([[5, 4, 3, 2, 1]], [1, 1, 1, 1, 1], 2),
+        [
+          [
+            0.669921875, 0.8200258559999998, 0.921167317, 0.976191488,
+            0.997002999,
+          ],
+        ]
+      );
+    },
     polynomialExpansion: () => {},
     weightedLeastSquare: () => {},
   };
@@ -163,6 +180,8 @@ function test(m: MathHelperLib) {
   tests.euclideanDist();
   console.log("  TEST: distanceMatrix");
   tests.distMatrix();
+  console.log("  TEST: weightMatrix");
+  tests.weightMatrix();
 }
 
 console.log("Testing Original Library (MathHelper)");

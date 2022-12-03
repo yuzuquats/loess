@@ -1,51 +1,7 @@
 import { MathHelper } from "./math-helper.mjs";
 import { assertEqFloat, assertEqFloatArr } from "./assert.mjs";
 import { MathJs } from "./mathjs.mjs";
-import type { matrix, arr1d } from "./mathjs.mjs";
-
-function testWeightMatrix() {
-  console.log("ENTRY: testWeightMatrix");
-  const distMat1: matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-  ];
-  const inputWeights: arr1d = [5, 10, 15];
-  const bandwidth: number = 3;
-  const val = MathHelper.weightMatrix(distMat1, inputWeights, bandwidth);
-  console.log(val);
-
-  const distMat = [[5, 4, 3, 2, 1]];
-
-  const caseOne = {
-    inputWeights: [1, 1, 1, 1, 1],
-    bandwidth: 0.6,
-    expect: [[0, 0, 0, 0.348, 0.893]],
-  };
-  const caseTwo = {
-    inputWeights: [1, 1, 1, 1, 1],
-    bandwidth: 2,
-    expect: [[0.67, 0.82, 0.921, 0.976, 0.997]],
-  };
-
-  // span <= 1
-  const actual = MathHelper.weightMatrix(
-    distMat,
-    caseOne.inputWeights,
-    caseOne.bandwidth
-  );
-  actual[0] = MathJs.round(actual[0], 3);
-  assertEqFloatArr(actual[0], caseOne.expect[0]);
-
-  // span > 1
-  const actual2 = MathHelper.weightMatrix(
-    distMat,
-    caseTwo.inputWeights,
-    caseTwo.bandwidth
-  );
-  actual2[0] = MathJs.round(actual2[0], 3);
-  assertEqFloatArr(actual2[0], caseTwo.expect[0]);
-  console.log("EXIT: testWeightMatrix");
-}
+import type { Matrix, arr1d } from "./mathjs.mjs";
 
 function testPolynomialExpansion() {
   console.log("ENTRY: testPolynomialExpansion");
@@ -77,7 +33,7 @@ function testPolynomialExpansion() {
   assertEqFloatArr(actual4[4], [3, 8]);
   assertEqFloatArr(actual4[5], [9, 16]);
 
-  const factors: matrix = [
+  const factors: Matrix = [
     [1, 2, 3],
     [4, 5, 6],
   ];
@@ -124,10 +80,5 @@ function testPolynomialExpansion() {
 // Reference: https://github.com/yongjun21/loess
 // https://mathjs.org/docs/reference/functions/mean.html
 
-testWeightFunction();
-testNormalization();
-testTranspose();
-testEuclideanDist();
-testDistMatrix();
 testWeightMatrix();
 testPolynomialExpansion();
