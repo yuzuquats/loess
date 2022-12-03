@@ -36,3 +36,17 @@ pub fn transpose(matrix: Array) -> Array {
     }
     transposed
 }
+
+#[wasm_bindgen(js_name = euclideanDist)]
+pub fn euclidean_distance(orig: Vec<f64>, dest: Vec<f64>) -> f64 {
+    if orig.len() < 2 {
+        return (orig.get(0).expect("") - dest.get(0).expect("")).abs();
+    }
+
+    orig.iter()
+        .enumerate()
+        .fold(0.0, |a, (i, val)| {
+            a + (val - dest.get(i).expect("")).powf(2.0)
+        })
+        .sqrt()
+}

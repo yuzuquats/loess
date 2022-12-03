@@ -20,7 +20,7 @@ function test(m) {
         normalize: () => {
             const assertNormalize = (refArray, expected, cutoff) => {
                 const output = m.normalize(refArray)(refArray);
-                console.log(output);
+                // console.log(output);
                 assertEqFloatArr(output, expected, Precision(-10));
                 assertEqFloat(MathJs.std(expected.slice(cutoff, expected.length - cutoff)), 1);
             };
@@ -79,7 +79,10 @@ function test(m) {
             assertEqFloatArr(actual[3], caseOne.expect[3]);
             assertEqFloatArr(actual[4], caseOne.expect[4]);
         },
-        euclideanDist: () => { },
+        euclideanDist: () => {
+            assertEqFloat(m.euclideanDist([1, 2], [4, 6]), 5);
+            assertEqFloat(MathJs.round(m.euclideanDist([1, 2, 3], [4, 5, 6]), 3), 5.196);
+        },
         distMatrix: () => { },
         weightMatrix: () => { },
         polynomialExpansion: () => { },
@@ -91,6 +94,8 @@ function test(m) {
     tests.normalize();
     console.log("  TEST: transpose");
     tests.transpose();
+    console.log("  TEST: euclideanDist");
+    tests.euclideanDist();
 }
 console.log("Testing Original Library (MathHelper)");
 test(MathHelper);

@@ -3,21 +3,6 @@ import { assertEqFloat, assertEqFloatArr } from "./assert.mjs";
 import { MathJs } from "./mathjs.mjs";
 import type { matrix, arr1d } from "./mathjs.mjs";
 
-function testEuclideanDist() {
-  console.log("ENTRY: testEuclideanDist");
-  const orig: arr1d = [1, 2];
-  const dest: arr1d = [4, 6];
-  const y: number = MathHelper.euclideanDist(orig, dest);
-  assertEqFloat(y, 5);
-
-  // should return Euclidean distance between two vectors
-  assertEqFloat(
-    MathJs.round(MathHelper.euclideanDist([1, 2, 3], [4, 5, 6]), 3),
-    5.196
-  );
-  console.log("EXIT: testEuclideanDist");
-}
-
 function testDistMatrix() {
   console.log("ENTRY: testDistMatrix");
   const origSet: matrix = [[1, 1]];
