@@ -58,7 +58,7 @@ const assertEqFloat = (a, b, precision = Number.EPSILON, message) => {
     }
 };
 hasWindow && (window.assertEqFloat = assertEqFloat);
-const assertEqFloatArr = (a, b, precision, message) => {
+const assertEqFloatArr = (a, b, precision = Number.EPSILON, message) => {
     assertEqual(a.length, b.length, "asserting an array - arrays should have the same length");
     function zip(arrays) {
         return arrays[0].map(function (_, i) {

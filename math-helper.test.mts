@@ -2,6 +2,7 @@ import { assertEqFloat, Precision, assertEqFloatArr } from "./assert.mjs";
 import mathRs from "./math-wasm/pkg/math_wasm.js";
 import { MathHelper, type MathHelperLib } from "./math-helper.mjs";
 import { MathJs } from "./mathjs.mjs";
+import type { matrix, arr1d } from "./mathjs.mjs";
 
 function test(m: MathHelperLib) {
   const tests = {
@@ -72,12 +73,50 @@ function test(m: MathHelperLib) {
         3
       );
     },
+    transpose: () => {
+      const y: matrix = MathHelper.transpose([
+        [1, 2, 3],
+        [4, 5, 6],
+      ]);
+      assertEqFloatArr(y[0], [1, 4]);
+      assertEqFloatArr(y[1], [2, 5]);
+      assertEqFloatArr(y[2], [3, 6]);
+
+      const caseOne = {
+        test: [
+          [1, 2, 3, 4, 5],
+          [6, 7, 8, 9, 10],
+        ],
+        expect: [
+          [1, 6],
+          [2, 7],
+          [3, 8],
+          [4, 9],
+          [5, 10],
+        ],
+      };
+
+      // should return transposed matrix'
+      const actual = m.transpose(caseOne.test);
+      assertEqFloatArr(actual[0], caseOne.expect[0]);
+      assertEqFloatArr(actual[1], caseOne.expect[1]);
+      assertEqFloatArr(actual[2], caseOne.expect[2]);
+      assertEqFloatArr(actual[3], caseOne.expect[3]);
+      assertEqFloatArr(actual[4], caseOne.expect[4]);
+    },
+    euclideanDist: () => {},
+    distMatrix: () => {},
+    weightMatrix: () => {},
+    polynomialExpansion: () => {},
+    weightedLeastSquare: () => {},
   };
 
   console.log("  TEST: weightFunction");
   tests.weightFunction();
   console.log("  TEST: normalize");
   tests.normalize();
+  console.log("  TEST: transpose");
+  tests.transpose();
 }
 
 console.log("Testing Original Library (MathHelper)");
@@ -88,3 +127,10 @@ console.log("_________________________________");
 console.log("Testing Rust Library (MathHelper)");
 test(mathRs as unknown as MathHelperLib);
 console.log("  PASSED");
+
+console.log(
+  (mathRs as unknown as MathHelperLib).transpose([
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10],
+  ])
+);

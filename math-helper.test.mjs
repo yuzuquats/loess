@@ -50,11 +50,47 @@ function test(m) {
                 12.72585812976492,
             ], 3);
         },
+        transpose: () => {
+            const y = MathHelper.transpose([
+                [1, 2, 3],
+                [4, 5, 6],
+            ]);
+            assertEqFloatArr(y[0], [1, 4]);
+            assertEqFloatArr(y[1], [2, 5]);
+            assertEqFloatArr(y[2], [3, 6]);
+            const caseOne = {
+                test: [
+                    [1, 2, 3, 4, 5],
+                    [6, 7, 8, 9, 10],
+                ],
+                expect: [
+                    [1, 6],
+                    [2, 7],
+                    [3, 8],
+                    [4, 9],
+                    [5, 10],
+                ],
+            };
+            // should return transposed matrix'
+            const actual = m.transpose(caseOne.test);
+            assertEqFloatArr(actual[0], caseOne.expect[0]);
+            assertEqFloatArr(actual[1], caseOne.expect[1]);
+            assertEqFloatArr(actual[2], caseOne.expect[2]);
+            assertEqFloatArr(actual[3], caseOne.expect[3]);
+            assertEqFloatArr(actual[4], caseOne.expect[4]);
+        },
+        euclideanDist: () => { },
+        distMatrix: () => { },
+        weightMatrix: () => { },
+        polynomialExpansion: () => { },
+        weightedLeastSquare: () => { },
     };
     console.log("  TEST: weightFunction");
     tests.weightFunction();
     console.log("  TEST: normalize");
     tests.normalize();
+    console.log("  TEST: transpose");
+    tests.transpose();
 }
 console.log("Testing Original Library (MathHelper)");
 test(MathHelper);
@@ -63,3 +99,7 @@ console.log("_________________________________");
 console.log("Testing Rust Library (MathHelper)");
 test(mathRs);
 console.log("  PASSED");
+console.log(mathRs.transpose([
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10],
+]));

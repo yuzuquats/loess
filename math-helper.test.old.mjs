@@ -1,60 +1,6 @@
 import { MathHelper } from "./math-helper.mjs";
 import { assertEqFloat, assertEqFloatArr } from "./assert.mjs";
 import { MathJs } from "./mathjs.mjs";
-function testNormalization() {
-    console.log("ENTRY: testNormalize");
-    const caseOne = {
-        test: [109, 8, 7, 6, 5, 4, 3, 2, 1, -100],
-        expect: [
-            44.499, 3.266, 2.858, 2.449, 2.041, 1.633, 1.225, 0.816, 0.408, -40.825,
-        ],
-    };
-    // should return array divided by 10% trimmed sample deviation
-    const normalizedArr = MathHelper.normalize(caseOne.test)(caseOne.test);
-    const val = MathJs.round(normalizedArr, 3);
-    assertEqFloatArr(val, caseOne.expect);
-    const caseTwo = {
-        test: [
-            0.665, 0.701, 0.71, 0.767, 0.801, 0.807, 0.825, 0.831, 0.891, 0.902,
-            0.928, 0.97, 0.973, 0.98, 0.997, 1.0, 1.021, 1.045, 1.074, 1.089, 1.148,
-            1.224,
-        ],
-    };
-    const normalizedArr2 = MathHelper.normalize(caseTwo.test)(caseTwo.test);
-    console.log(normalizedArr2);
-    console.log("EXIT: testNormalize");
-}
-function testTranspose() {
-    console.log("ENTRY: testTranspose");
-    const y = MathHelper.transpose([
-        [1, 2, 3],
-        [4, 5, 6],
-    ]);
-    assertEqFloatArr(y[0], [1, 4]);
-    assertEqFloatArr(y[1], [2, 5]);
-    assertEqFloatArr(y[2], [3, 6]);
-    const caseOne = {
-        test: [
-            [1, 2, 3, 4, 5],
-            [6, 7, 8, 9, 10],
-        ],
-        expect: [
-            [1, 6],
-            [2, 7],
-            [3, 8],
-            [4, 9],
-            [5, 10],
-        ],
-    };
-    // should return transposed matrix'
-    const actual = MathHelper.transpose(caseOne.test);
-    assertEqFloatArr(actual[0], caseOne.expect[0]);
-    assertEqFloatArr(actual[1], caseOne.expect[1]);
-    assertEqFloatArr(actual[2], caseOne.expect[2]);
-    assertEqFloatArr(actual[3], caseOne.expect[3]);
-    assertEqFloatArr(actual[4], caseOne.expect[4]);
-    console.log("EXIT: testTranspose");
-}
 function testEuclideanDist() {
     console.log("ENTRY: testEuclideanDist");
     const orig = [1, 2];

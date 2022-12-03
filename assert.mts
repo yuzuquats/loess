@@ -76,7 +76,7 @@ hasWindow && (window.assertEqFloat = assertEqFloat);
 const assertEqFloatArr = (
   a: arr1d,
   b: arr1d,
-  precision: number,
+  precision: number = Number.EPSILON,
   message?: string
 ) => {
   assertEqual(
