@@ -1,5 +1,5 @@
 import { MathJs, type MathJsLibrary } from "./mathjs.mjs";
-import { assertEqFloat, assertError, Precision } from "./assert.mjs";
+import { assertEqFloat, assertEqFloatArr, assertError, Precision } from "./assert.mjs";
 import mathRs from "./math-wasm/pkg/math_wasm.js";
 
 function test(m: MathJsLibrary) {
@@ -12,7 +12,10 @@ function test(m: MathJsLibrary) {
       assertEqFloat(m.std([1, 2, 3, 4, 5]), 1.5811388300841898, Precision(-7));
       assertEqFloat(m.std([1, 1, 1, 1, 1]), 0);
     },
-    dotMultiply: () => {},
+    dotMultiply: () => {
+      assertEqFloatMatrix(m.dotMultiply([[9, 5], [6, 1]], [[3, 2], [5, 2]]),  
+      [[27, 10], [30, 2]], Precision(-5))
+    },
     sum: () => {
       assertEqFloat(m.sum([]), 0);
       assertEqFloat(m.sum([1]), 1);
@@ -52,15 +55,26 @@ function test(m: MathJsLibrary) {
     squeeze: () => {},
     inv: () => {},
     matrix: () => {},
-    mean: () => {},
-    transpose: () => {},
-    euclideanDist: () => {},
-    distMatrix: () => {},
-    round: () => {},
-    abs: () => {},
-    median: () => {},
-    zeroes: () => {},
-    ones: () => {},
+    mean: () => {
+      assertEqFloat(m.mean([1, 2.7, 3.2, 4]), 2.725, Precision(-6));
+    },
+    round: () => {
+      assertEqFloat(m.round(3.22, 1), 3.2, Precision(3));
+    },
+    abs: () => {
+      assertEqFloat(m.abs([-3.22]), [3.22], Precision(3)); 
+    },
+    median: () => {
+      assertEqFloat(m.median([5, 2, 7]), 5, Precision(3));
+      assertEqFloat(m.median([3, -1, 5, 7]), 4, Precision(3));
+
+    },
+    zeroes: () => {
+      assertEqFloatArr(m.zeros(3)._data, [0,0,0], Precision(3)); 
+    },
+    ones: () => {
+      assertEqFloatArr(m.ones(3)._data, [1,1,1], Precision(3)); 
+    },
     sort: () => {},
     size: () => {},
   };
@@ -73,11 +87,24 @@ function test(m: MathJsLibrary) {
   tests.square();
   console.log("  TEST: subtract");
   tests.subtract();
+  console.log("  TEST: mean");
+  tests.mean();
+  console.log("  TEST: median");
+  tests.median();
+  console.log("  TEST: abs");
+  tests.abs();
+  console.log("  TEST: ones");
+  tests.ones();
+  console.log("  TEST: zeros");
+  tests.zeroes();            
 }
 
 console.log("Testing Original Library (MathJs)");
 test(MathJs);
 console.log("  PASSED");
+
+console.log(MathJs.ones(3));
+console.log(mathRs.ones(3));
 
 console.log("_________________________________");
 console.log("Testing Rust Library (MathJs)");

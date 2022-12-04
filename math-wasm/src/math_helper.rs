@@ -19,7 +19,7 @@ pub fn weight_function(d: f32, dmax: f32, degree: f32) -> f32 {
 #[wasm_bindgen]
 pub fn normalize(mut arr: Vec<f64>) -> JsValue {
     let cutoff = (0.1 * arr.len() as f64).ceil() as usize;
-    arr.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    arr.sort_by(|a, b| a.partial_cmp(b).expect("a must be comparable to b"));
     let std = crate::std(&arr[cutoff..arr.len() - cutoff]);
     Closure::once_into_js(move |a: Vec<f64>| a.iter().map(|v| v / std).collect::<Vec<f64>>())
 }
@@ -46,8 +46,8 @@ pub fn euclidean_distance(orig: Vec<f64>, dest: Vec<f64>) -> f64 {
     }
     orig.iter()
         .enumerate()
-        .fold(0.0, |a, (i, val)| {
-            a + (val - dest.get(i).expect("")).powf(2.0)
+        .fold(0.0, |accum, (i, val)| {
+            accum + (val - dest.get(i).expect("")).powf(2.0)
         })
         .sqrt()
 }

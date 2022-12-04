@@ -1,6 +1,8 @@
-#![feature(trait_alias)]
+//#![feature(trait_alias)]
 
 use wasm_bindgen::prelude::*;
+use js_sys::Array;
+use js_sys::Uint16Array;
 
 mod math_helper;
 
@@ -44,10 +46,20 @@ pub fn std(values: &[f64]) -> f64 {
     f64::sqrt(variance)
 }
 
+//#[wasm_bindgen]
+//pub fn dotMultiply(left: Matrix, right: Matrix) -> Matrix {
+    //TODO
+//}
+
 #[wasm_bindgen]
 pub fn sum(values: Vec<f32>) -> f32 {
     values.iter().fold(0.0, |a, v| a + v)
 }
+
+//#[wasm_bindgen]
+//pub fn multiply(left: Matrix, right: Matrix) -> Matrix {
+    //TODO
+//}
 
 #[wasm_bindgen]
 pub fn subtract(a: f32, b: f32) -> f32 {
@@ -58,6 +70,75 @@ pub fn subtract(a: f32, b: f32) -> f32 {
 pub fn square(n: f32) -> f32 {
     n.powf(2.0)
 }
+
+//#[wasm_bindgen]
+//pub fn squeeze(matrix: Matrix) -> Matrix {
+    //TODO
+//}
+
+//#[wasm_bindgen]
+//pub fn inv(matrix: Matrix) -> Matrix {
+    //TODO
+//}
+
+#[wasm_bindgen]
+pub fn mean(values: &[f64]) -> f64 {
+    let len = values.len() as f64;
+    let mean = values.iter().fold(0.0, |accum, v| accum + v) / len;
+    mean
+
+}
+
+#[wasm_bindgen]
+pub fn round(x: f32, decimals: u32) -> f32 {
+    let y = 10i32.pow(decimals) as f32;
+    (x * y).round() / y
+}
+
+#[wasm_bindgen]
+pub fn abs(values: Vec<f64>) -> js_sys::Float64Array {
+    let size  = values.len(); 
+    let array = js_sys::Float64Array::new_with_length(size as u32);
+    for i in 0..size {
+        array.set_index(i as u32, values[i].abs())
+    }
+    array
+
+}
+
+#[wasm_bindgen]
+pub fn median(mut values: Vec<f64>) -> f64 {    
+    let size = values.len();
+    values.sort_by(|a, b| a.partial_cmp(b).expect("a must be comparable to b"));
+    let mid = size/2;
+    if size % 2 == 0 {
+        let med_1 = values[mid - 1];
+        let med_2 = values[mid];
+        return (med_1 + med_2) / 2.0;
+    } 
+    
+    let med = values[mid];
+    med
+    
+}
+
+#[wasm_bindgen]
+pub fn zeros(n: u32) -> Uint16Array {
+    let array = js_sys::Uint16Array::new_with_length(n);
+    array.fill(0, 0, n)
+}
+
+#[wasm_bindgen]
+pub fn ones(n: u32) -> Uint16Array {
+    let array = js_sys::Uint16Array::new_with_length(n);
+    array.fill(1, 0, n)
+}
+
+//#[wasm_bindgen]
+//pub fn size(n: f32) -> f32 {
+//    // TODO
+//}
+
 
 #[cfg(test)]
 mod tests {
